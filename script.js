@@ -114,69 +114,106 @@ const formatLeadMessage = (lead) => {
 
 const assistantRules = [
   {
-    keywords: ["fiyat", "ucret", "ücret", "kontenjan", "kampanya", "taksit"],
+    priority: 4,
+    keywords: ["fiyat", "ucret", "ücret", "odeme", "ödeme", "taksit", "pesin", "peşin", "kampanya", "kontenjan"],
     answer:
-      "Fiyat ve kontenjan bilgisi programa, sınıfa ve dönem kontenjanına göre netleşir. En hızlı yol ön kayıt formunu doldurmak ya da WhatsApp üzerinden yazmak; danışman ekip uygun programı söyleyip güncel fiyat bilgisini paylaşır.",
+      "Fiyat ve kontenjan bilgisi öğrencinin sınıfı, hedefi ve seçilecek programa göre netleşir. En sağlıklı yol kısa bir ön görüşme yapmak; danışman ekip sınıf seviyesini, ihtiyaç duyulan ders yoğunluğunu ve uygun ödeme seçeneklerini birlikte değerlendirir. Formu doldurursanız dönüş için talep numarası oluşur.",
   },
   {
-    keywords: ["kayit", "kayıt", "on kayit", "ön kayıt", "basvuru", "başvuru"],
+    priority: 4,
+    keywords: ["kayit", "kayıt", "on kayit", "ön kayıt", "basvuru", "başvuru", "gorusme", "görüşme", "randevu", "nasil baslar", "nasıl başlar"],
     answer:
-      "Ön kayıt için öğrencinin adı, sınıfı, veli telefonu ve ilgilendiği program yeterli. Formu doldurduktan sonra talep numarası oluşur ve bilgileri WhatsApp ile kuruma gönderebilirsiniz.",
+      "Kayıt süreci önce öğrenci ve veliyle kısa bir hedef görüşmesiyle başlar. Öğrencinin sınıfı, okul durumu, deneme netleri varsa mevcut seviyesi ve hedefi konuşulur. Sonra uygun program, ders yoğunluğu, etüt ihtiyacı ve kontenjan durumu netleştirilir. Ön kayıt formu bu görüşme için hızlı talep oluşturur.",
   },
   {
-    keywords: ["lgs", "8", "sekizinci", "ortaokul", "7", "yedinci"],
+    priority: 5,
+    keywords: ["lgs", "8. sınıf", "8 sinif", "sekizinci", "ortaokul", "7. sınıf", "7 sinif", "yedinci"],
     answer:
-      "LGS programında 7. ve 8. sınıflar için yeni nesil soru çözümü, haftalık ödev takibi, deneme analizi, etüt ve okul derslerine destek birlikte ilerler.",
+      "LGS tarafında hedef sadece konu bitirmek değil, öğrencinin yeni nesil soru okuma ve süre yönetimini geliştirmek. Programda konu anlatımı, soru çözümü, düzenli deneme, deneme sonrası eksik analizi, ödev kontrolü ve ihtiyaç oldukça etüt desteği birlikte ilerler. Veliye de öğrencinin devam, ödev ve deneme süreciyle ilgili düzenli bilgi verilir.",
   },
   {
-    keywords: ["yks", "tyt", "ayt", "mezun", "12", "on ikinci", "11", "universite", "üniversite"],
+    priority: 5,
+    keywords: ["yks", "tyt", "ayt", "mezun", "12. sınıf", "12 sinif", "on ikinci", "11. sınıf", "11 sinif", "universite", "üniversite"],
     answer:
-      "YKS tarafında 11. sınıf, 12. sınıf ve mezun öğrenciler için TYT temel güçlendirme, AYT branş takibi, deneme analizi ve rehberlik görüşmeleri planlanır.",
+      "YKS programında TYT temeli ve AYT branş takibi ayrı ayrı izlenir. Öğrenciye göre konu planı, deneme takvimi, net analizi ve rehberlik görüşmeleri düzenlenir. 11. sınıf, 12. sınıf ve mezun öğrencilerde tempo farklı olduğu için önce mevcut seviye ve hedef bölüm konuşulup ona göre program önerilir.",
   },
   {
-    keywords: ["deneme", "sinav", "sınav", "analiz", "net", "sonuc", "sonuç"],
+    priority: 5,
+    keywords: ["deneme", "sinav", "sınav", "analiz", "net", "sonuc", "sonuç", "rapor", "optik", "eksik"],
     answer:
-      "Deneme kulübünde öğrenciler gerçek sınav atmosferinde denemeye girer. Sonrasında netler, konu eksikleri ve sıralama raporu incelenir; çalışma planı bu analize göre güncellenir.",
+      "Denemeler sadece puan görmek için değil, öğrencinin nerede kaybettiğini anlamak için kullanılır. Sonuçlarda netler, boş-yanlış dağılımı, konu eksikleri ve süre kullanımı incelenir. Bu analizden sonra etüt, ödev ve tekrar planı güncellenir; veliye de öğrencinin gidişatı hakkında anlaşılır bilgi verilir.",
   },
   {
-    keywords: ["basari", "başarı", "kazanan", "yerlesen", "yerleşen", "ogrenci", "öğrenci"],
+    priority: 3,
+    keywords: ["basari", "başarı", "kazanan", "yerlesen", "yerleşen", "derece", "sonuclar", "sonuçlar"],
     answer:
       "Başarılı öğrenciler bölümü şimdilik örnek listeyle hazırlandı. Gerçek liste geldiğinde öğrencilerin isimleri ve kazandıkları okul veya bölümler bu alanda güncellenecek.",
   },
   {
-    keywords: ["ozel ders", "özel ders", "vip", "birebir", "etut", "etüt"],
+    priority: 5,
+    keywords: ["sinif mevcudu", "sınıf mevcudu", "kac kisi", "kaç kişi", "kalabalik", "kalabalık", "siniflar", "sınıflar"],
     answer:
-      "Özel ders ve VIP sınıf seçeneği, özellikle eksik branşlarda hızlı telafi için kullanılır. Matematik, geometri ve ihtiyaç duyulan derslerde birebir ya da küçük grup planı yapılabilir.",
+      "Sınıf yapısı öğrencinin takip edilebilir olması için odaklı tutulur. Kesin kontenjan program ve döneme göre değişebilir; bu yüzden görüşmede öğrencinin sınıfı ve istediği program öğrenildikten sonra uygun grup söylenir. Ama amaç kalabalık sınıfta kaybolan öğrenci değil, öğretmenin gelişimini izleyebildiği öğrenci profili oluşturmaktır.",
   },
   {
+    priority: 4,
+    keywords: ["ozel ders", "özel ders", "vip", "birebir", "etut", "etüt", "telafi", "eksik ders", "matematik", "geometri"],
+    answer:
+      "Özel ders, VIP sınıf ve etüt desteği özellikle eksik konu kapatmak için kullanılır. Öğrencinin zorlandığı branş tespit edilir, sonra birebir ya da küçük grup çalışmasıyla hızlı telafi planlanır. Matematik ve geometri gibi birikimli derslerde bu destek çok faydalı olur.",
+  },
+  {
+    priority: 4,
+    keywords: ["rehberlik", "kocluk", "koçluk", "motivasyon", "program", "plan", "takip", "tercih"],
+    answer:
+      "Rehberlik tarafında öğrencinin haftalık çalışma düzeni, deneme sonuçları ve motivasyonu takip edilir. Amaç sadece ders anlatmak değil; öğrencinin ne çalışacağını, ne kadar soru çözeceğini ve hangi eksikleri önce kapatacağını bilmesi. Sınav döneminde tercih ve hedef planlaması da bu sürecin parçası olur.",
+  },
+  {
+    priority: 4,
+    keywords: ["veli", "devamsizlik", "devamsızlık", "odev", "ödev", "bilgilendirme", "raporlama", "veli takibi"],
+    answer:
+      "Veli bilgilendirmesinde öğrencinin devamsızlığı, ödev disiplini, deneme sonuçları ve rehberlik notları takip edilir. Böylece veli sadece dönem sonunda değil, süreç içinde öğrencinin nerede iyi gittiğini ve nerede desteğe ihtiyaç duyduğunu görebilir.",
+  },
+  {
+    priority: 4,
+    keywords: ["ogretmen", "öğretmen", "hoca", "kadro", "brans", "branş", "egitim kadrosu", "eğitim kadrosu"],
+    answer:
+      "Öğretmen kadrosunda önemli olan sadece ders anlatımı değil, öğrencinin eksiklerini fark edip doğru yönlendirme yapabilmesidir. Branş öğretmenleri ders, soru çözümü, ödev ve deneme sonuçlarını birlikte değerlendirerek öğrencinin ilerleyişini takip eder.",
+  },
+  {
+    priority: 3,
     keywords: ["adres", "konum", "nerede", "harita", "yol"],
     answer:
       "Konum: SEFAKÖY MY FEN BİLİMLERİ ÖZEL ÖĞRETİM KURSU. Adres: Tevfik Bey Mah. Vahit Efendi Sk. No:13, Küçükçekmece / İstanbul. İletişim bölümündeki yol tarifi butonuyla Google Maps konumunu açabilirsiniz.",
   },
   {
+    priority: 3,
     keywords: ["saat", "acik", "açık", "calisma", "çalışma", "gun", "gün"],
     answer:
       "Kurum görüşmeleri için sayfada belirtilen saat aralığı her gün 09.00 - 19.00. Gitmeden önce telefon ya da WhatsApp ile uygun görüşme saatini teyit etmek iyi olur.",
   },
   {
+    priority: 3,
     keywords: ["telefon", "whatsapp", "ara", "iletisim", "iletişim"],
     answer:
-      "Telefon numaraları: 0549 312 85 20 ve 0212 592 91 98. Sağdaki asistanı kapatmadan sol orta kenardaki WhatsApp alanından da hızlıca yazabilirsiniz.",
+      "Telefon numaraları 0549 312 85 20 ve 0212 592 91 98. Hızlı dönüş için WhatsApp üzerinden yazabilir ya da ön kayıt formunu doldurup talebinizi kuruma iletebilirsiniz.",
   },
   {
+    priority: 3,
     keywords: ["sahip", "kurucu", "nesim", "akdeniz", "mudur", "müdür"],
     answer:
       "Sefaköy My Fen Bilimleri kurum sahibi Nesim AKDENİZ olarak belirtilmiştir.",
   },
   {
-    keywords: ["burs", "bursluluk", "indirim"],
+    priority: 4,
+    keywords: ["burs", "bursluluk", "indirim", "bursluluk sinavi", "bursluluk sınavı"],
     answer:
-      "Bursluluk ve indirim bilgileri dönemsel olarak değişebilir. Ön kayıt formunda programı Bursluluk Sınavı seçerseniz danışman ekip sınav günü, saat ve şartları paylaşır.",
+      "Bursluluk ve indirim bilgileri dönemsel olarak değişebilir. Öğrencinin sınıfı, sınav sonucu ve kontenjan durumuna göre değerlendirme yapılır. Ön kayıt formunda Bursluluk Sınavı seçilirse danışman ekip sınav günü, saat ve şartları paylaşır.",
   },
   {
-    keywords: ["veli", "takip", "devamsizlik", "devamsızlık", "odev", "ödev"],
+    priority: 3,
+    keywords: ["servis", "ulasim", "ulaşım", "metrobus", "metrobüs", "otobus", "otobüs"],
     answer:
-      "Veli bilgilendirmesinde devamsızlık, ödev takibi, deneme sonuçları ve rehberlik notları düzenli paylaşılır. Böylece öğrenci süreci sadece kurumda değil evde de takip edilebilir.",
+      "Kurum Sefaköy merkezde, Tevfik Bey Mahallesi Vahit Efendi Sokak No:13 adresindedir. Ulaşım ve servis gibi detaylar dönemsel olarak değişebileceği için en doğru bilgi için telefon ya da WhatsApp üzerinden teyit almak iyi olur.",
   },
 ];
 
@@ -188,17 +225,24 @@ const normalizeAssistantText = (value) =>
 
 const getAssistantAnswer = (question) => {
   const normalized = normalizeAssistantText(question);
-  const rule = assistantRules.find((item) =>
-    item.keywords.some((keyword) => normalized.includes(normalizeAssistantText(keyword))),
-  );
+  const scoredRules = assistantRules
+    .map((rule) => {
+      const matchedKeywords = rule.keywords.filter((keyword) =>
+        normalized.includes(normalizeAssistantText(keyword)),
+      );
+      const score = matchedKeywords.reduce((total, keyword) => total + keyword.length, 0) + (rule.priority || 0) * 8;
+      return { rule, score, matchedCount: matchedKeywords.length };
+    })
+    .filter((item) => item.matchedCount > 0)
+    .sort((a, b) => b.score - a.score || b.matchedCount - a.matchedCount);
 
-  if (rule) return rule.answer;
+  if (scoredRules.length) return scoredRules[0].rule.answer;
 
   if (["merhaba", "selam", "slm", "iyi gunler", "iyi günler"].some((word) => normalized.includes(normalizeAssistantText(word)))) {
-    return "Merhaba, size yardımcı olayım. Kayıt, fiyat, LGS, YKS, deneme kulübü, adres veya çalışma saatleri hakkında soru sorabilirsiniz.";
+    return "Merhaba, size yardımcı olayım. Öğrencinin sınıfı, hedefi, mevcut netleri ya da merak ettiğiniz konu varsa yazabilirsiniz. Kayıt süreci, fiyat-kontenjan, LGS/YKS programı, deneme analizi, rehberlik, veli takibi ve bursluluk hakkında bilgi verebilirim.";
   }
 
-  return "Bu konuda en doğru yanıt için danışman ekibin sizi araması iyi olur. Ön kayıt formunu doldurabilir ya da WhatsApp üzerinden sorunuzu gönderebilirsiniz. Ben kayıt, fiyat, program, konum ve deneme kulübü sorularında hızlı yardımcı olabilirim.";
+  return "Bu konuda net konuşabilmek için öğrencinin sınıfı, hedefi ve hangi konuda destek aradığınızı bilmek iyi olur. İsterseniz sorunuzu biraz daha detaylandırın; kayıt, fiyat-kontenjan, LGS/YKS, deneme analizi, etüt, rehberlik ve veli takibi konularında yardımcı olabilirim. Daha özel durumlarda ön kayıt formu veya WhatsApp üzerinden danışman ekibe ulaşmanız en doğru yol olur.";
 };
 
 const addAssistantMessage = (message, type) => {
