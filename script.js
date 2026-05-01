@@ -2,6 +2,7 @@ const WHATSAPP_PHONE = "905493128520";
 const INSTAGRAM_URL = "https://www.instagram.com/sefakoymyfenbilimleri/";
 const SOCIAL_NOTICE_FIRST_DELAY = 5000;
 const SOCIAL_NOTICE_NEXT_DELAY = 5000;
+const ASSISTANT_ANIMATION_MS = 320;
 const DEFAULT_MESSAGE =
   "Merhaba, Sefaköy My Fen Bilimleri hakkında bilgi almak istiyorum.";
 
@@ -138,6 +139,11 @@ const assistantRules = [
       "Deneme kulübünde öğrenciler gerçek sınav atmosferinde denemeye girer. Sonrasında netler, konu eksikleri ve sıralama raporu incelenir; çalışma planı bu analize göre güncellenir.",
   },
   {
+    keywords: ["basari", "başarı", "kazanan", "yerlesen", "yerleşen", "ogrenci", "öğrenci"],
+    answer:
+      "Başarılı öğrenciler bölümü şimdilik örnek listeyle hazırlandı. Gerçek liste geldiğinde öğrencilerin isimleri ve kazandıkları okul veya bölümler bu alanda güncellenecek.",
+  },
+  {
     keywords: ["ozel ders", "özel ders", "vip", "birebir", "etut", "etüt"],
     answer:
       "Özel ders ve VIP sınıf seçeneği, özellikle eksik branşlarda hızlı telafi için kullanılır. Matematik, geometri ve ihtiyaç duyulan derslerde birebir ya da küçük grup planı yapılabilir.",
@@ -156,6 +162,11 @@ const assistantRules = [
     keywords: ["telefon", "whatsapp", "ara", "iletisim", "iletişim"],
     answer:
       "Telefon numaraları: 0549 312 85 20 ve 0212 592 91 98. Sağdaki asistanı kapatmadan sol orta kenardaki WhatsApp alanından da hızlıca yazabilirsiniz.",
+  },
+  {
+    keywords: ["sahip", "kurucu", "nesim", "akdeniz", "mudur", "müdür"],
+    answer:
+      "Sefaköy My Fen Bilimleri kurum sahibi Nesim AKDENİZ olarak belirtilmiştir.",
   },
   {
     keywords: ["burs", "bursluluk", "indirim"],
@@ -354,22 +365,38 @@ if (exportLeads) {
 }
 
 if (assistantToggle && assistantPanel) {
-  assistantToggle.addEventListener("click", () => {
-    const isOpen = !assistantPanel.hasAttribute("hidden");
-    assistantPanel.toggleAttribute("hidden", isOpen);
-    assistantToggle.setAttribute("aria-expanded", String(!isOpen));
-    assistantToggle.setAttribute("aria-label", isOpen ? "Site asistanını aç" : "Site asistanını kapat");
-    if (!isOpen) window.setTimeout(() => assistantInput?.focus(), 120);
-  });
-}
+  const openAssistantPanel = () => {
+    assistantToggle.setAttribute("hidden", "");
+    assistantToggle.setAttribute("aria-expanded", "true");
+    assistantToggle.setAttribute("aria-label", "Site asistanı açık");
+    assistantPanel.classList.remove("is-closing");
+    assistantPanel.removeAttribute("hidden");
 
-if (assistantClose && assistantPanel && assistantToggle) {
-  assistantClose.addEventListener("click", () => {
-    assistantPanel.setAttribute("hidden", "");
-    assistantToggle.setAttribute("aria-expanded", "false");
-    assistantToggle.setAttribute("aria-label", "Site asistanını aç");
-    assistantToggle.focus();
-  });
+    window.requestAnimationFrame(() => {
+      assistantPanel.classList.add("is-open");
+      window.setTimeout(() => assistantInput?.focus(), ASSISTANT_ANIMATION_MS);
+    });
+  };
+
+  const closeAssistantPanel = () => {
+    assistantPanel.classList.remove("is-open");
+    assistantPanel.classList.add("is-closing");
+
+    window.setTimeout(() => {
+      assistantPanel.classList.remove("is-closing");
+      assistantPanel.setAttribute("hidden", "");
+      assistantToggle.removeAttribute("hidden");
+      assistantToggle.setAttribute("aria-expanded", "false");
+      assistantToggle.setAttribute("aria-label", "Site asistanını aç");
+      assistantToggle.focus();
+    }, ASSISTANT_ANIMATION_MS);
+  };
+
+  assistantToggle.addEventListener("click", openAssistantPanel);
+
+  if (assistantClose) {
+    assistantClose.addEventListener("click", closeAssistantPanel);
+  }
 }
 
 if (assistantForm) {
