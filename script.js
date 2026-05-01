@@ -1,4 +1,7 @@
 const WHATSAPP_PHONE = "905493128520";
+const INSTAGRAM_URL = "https://www.instagram.com/sefakoymyfenbilimleri/";
+const SOCIAL_NOTICE_FIRST_DELAY = 5000;
+const SOCIAL_NOTICE_NEXT_DELAY = 5000;
 const DEFAULT_MESSAGE =
   "Merhaba, Sefaköy My Fen Bilimleri hakkında bilgi almak istiyorum.";
 
@@ -17,6 +20,7 @@ const assistantClose = document.querySelector("#assistantClose");
 const assistantMessages = document.querySelector("#assistantMessages");
 const assistantForm = document.querySelector("#assistantForm");
 const assistantInput = document.querySelector("#assistantInput");
+const socialNoticeCloseButtons = document.querySelectorAll("[data-social-notice-close]");
 let assistantTyping = false;
 
 const buildWhatsappUrl = (message = DEFAULT_MESSAGE) =>
@@ -28,6 +32,45 @@ const setWhatsappLinks = () => {
     link.setAttribute("target", "_blank");
     link.setAttribute("rel", "noreferrer");
   });
+};
+
+const setInstagramLinks = () => {
+  document.querySelectorAll("[data-instagram-link]").forEach((link) => {
+    link.setAttribute("href", INSTAGRAM_URL);
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noreferrer");
+  });
+};
+
+const getSocialNotice = (name) =>
+  document.querySelector(`[data-social-notice="${name}"]`);
+
+const showSocialNotice = (name) => {
+  const notice = getSocialNotice(name);
+  if (!notice) return;
+  notice.removeAttribute("hidden");
+  window.requestAnimationFrame(() => notice.classList.add("is-visible"));
+};
+
+const hideSocialNotice = (notice) => {
+  notice.classList.remove("is-visible");
+  window.setTimeout(() => {
+    notice.setAttribute("hidden", "");
+  }, 220);
+};
+
+const scheduleSocialNotices = () => {
+  window.setTimeout(() => {
+    showSocialNotice("instagram");
+
+    window.setTimeout(() => {
+      const instagramNotice = getSocialNotice("instagram");
+      if (instagramNotice && instagramNotice.classList.contains("is-visible")) {
+        hideSocialNotice(instagramNotice);
+      }
+      showSocialNotice("whatsapp");
+    }, SOCIAL_NOTICE_NEXT_DELAY);
+  }, SOCIAL_NOTICE_FIRST_DELAY);
 };
 
 const showStatus = (message, isError = false) => {
@@ -112,7 +155,7 @@ const assistantRules = [
   {
     keywords: ["telefon", "whatsapp", "ara", "iletisim", "iletişim"],
     answer:
-      "Telefon numaraları: 0549 312 85 20 ve 0212 592 91 98. Sağdaki asistanı kapatmadan sol alttaki WhatsApp alanından da hızlıca yazabilirsiniz.",
+      "Telefon numaraları: 0549 312 85 20 ve 0212 592 91 98. Sağdaki asistanı kapatmadan sol orta kenardaki WhatsApp alanından da hızlıca yazabilirsiniz.",
   },
   {
     keywords: ["burs", "bursluluk", "indirim"],
@@ -191,6 +234,15 @@ const askAssistant = (question) => {
 };
 
 setWhatsappLinks();
+setInstagramLinks();
+scheduleSocialNotices();
+
+socialNoticeCloseButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const notice = button.closest("[data-social-notice]");
+    if (notice) hideSocialNotice(notice);
+  });
+});
 
 if (navToggle && navLinks) {
   navToggle.addEventListener("click", () => {

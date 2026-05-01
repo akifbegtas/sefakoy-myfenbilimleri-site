@@ -102,7 +102,8 @@ textarea {
   color: #25d366;
 }
 
-.whatsapp-icon {
+.whatsapp-icon,
+.instagram-icon {
   width: 22px;
   height: 22px;
   display: block;
@@ -894,57 +895,124 @@ textarea {
   font-weight: 900;
 }
 
-.floating-whatsapp {
+.social-rail {
   position: fixed;
-  left: 18px;
-  right: auto;
-  bottom: 18px;
-  z-index: 40;
-  width: auto;
-  height: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 0;
-  color: #25d366;
-  background: transparent;
-  border-radius: 0;
-  box-shadow: none;
-  font-weight: 900;
+  left: 0;
+  top: 50%;
+  z-index: 60;
+  display: grid;
+  gap: 8px;
+  transform: translateY(-50%);
 }
 
-.floating-whatsapp__label {
-  max-width: 230px;
+.social-rail__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.social-rail__button {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 14px 34px rgba(18, 55, 47, 0.2);
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
+}
+
+.social-rail__button:hover {
+  filter: brightness(1.04);
+  transform: translateX(2px);
+}
+
+.social-rail__button svg {
+  width: 27px;
+  height: 27px;
+}
+
+.social-rail__button--instagram {
+  background:
+    radial-gradient(circle at 28% 105%, #f9d66a 0 20%, transparent 38%),
+    linear-gradient(135deg, #6f42d8 0%, #d62976 48%, #fa7e1e 100%);
+}
+
+.social-rail__button--whatsapp {
+  background: #25d366;
+}
+
+.social-notice {
+  position: absolute;
+  left: 66px;
+  top: 50%;
+  min-width: 196px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   padding: 12px 14px;
   color: var(--green-deep);
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 14px 38px rgba(18, 55, 47, 0.16);
+  box-shadow: 0 16px 42px rgba(18, 55, 47, 0.18);
+  font-weight: 900;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-8px, -50%);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 
-.floating-whatsapp__label strong,
-.floating-whatsapp__label small {
-  display: block;
+.social-notice[hidden] {
+  display: none;
 }
 
-.floating-whatsapp__label strong {
-  font-size: 0.96rem;
-  line-height: 1.18;
+.social-notice.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
 }
 
-.floating-whatsapp__label small {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.25;
+.social-notice::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: translateY(-50%) rotate(45deg);
 }
 
-.floating-whatsapp .whatsapp-icon {
-  width: 70px;
-  height: 70px;
+.social-notice a {
+  position: relative;
+  z-index: 1;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.social-notice button {
+  position: relative;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
   flex: 0 0 auto;
+  padding: 0;
+  color: var(--muted);
+  background: var(--mint);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.05rem;
+  line-height: 1;
 }
 
 .assistant-widget {
@@ -1253,24 +1321,31 @@ textarea {
     display: grid;
   }
 
-  .floating-whatsapp {
-    left: 12px;
-    right: auto;
-    bottom: 78px;
-    gap: 8px;
+  .social-rail {
+    top: 52%;
+    gap: 6px;
   }
 
-  .floating-whatsapp__label {
-    max-width: 178px;
+  .social-rail__button {
+    width: 48px;
+    height: 48px;
+  }
+
+  .social-rail__button svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .social-notice {
+    left: 58px;
+    min-width: 0;
+    max-width: min(190px, calc(100vw - 78px));
     padding: 10px 11px;
-  }
-
-  .floating-whatsapp__label strong {
     font-size: 0.82rem;
   }
 
-  .floating-whatsapp__label small {
-    font-size: 0.7rem;
+  .social-notice a {
+    white-space: normal;
   }
 
   .assistant-widget {

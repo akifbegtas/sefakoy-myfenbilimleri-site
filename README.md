@@ -13,4 +13,4 @@ Bu klasör, dershane sitesi için statik ve bağımsız çalışan ilk sürümü
 - WhatsApp yönlendirmesi `0549 312 85 20` numarasına göre ayarlandı.
 - Ön kayıtlar bu prototipte tarayıcının `localStorage` alanında saklanır.
 - Canlı projede form verileri için bir backend, CRM, e-posta servisi veya Google Sheets entegrasyonu bağlanmalıdır.
-- İletişim bilgileri ve adres, web araştırmasında görünen Sefaköy Fen Bilimleri kayıtlarına göre başlangıç olarak yerleştirildi.
+- İletişim bilgileri ve adres, Sefaköy My Fen Bilimleri kayıtlarına göre başlangıç olarak yerleştirildi.
