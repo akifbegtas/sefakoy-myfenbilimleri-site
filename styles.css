@@ -144,11 +144,19 @@ textarea {
   box-shadow: none;
 }
 
+.brand--logo {
+  gap: 12px;
+}
+
 .brand--logo img {
   display: block;
-  width: min(168px, 42vw);
+  width: min(86px, 22vw);
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: top center;
+  aspect-ratio: 1 / 0.86;
+  clip-path: inset(0 0 38% 0);
+  margin-bottom: -28px;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
   transition: filter 240ms ease, transform 240ms ease;
 }
@@ -156,6 +164,17 @@ textarea {
 .brand--logo:hover img {
   filter: drop-shadow(0 2px 10px rgba(201, 168, 76, 0.42)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
   transform: translateY(-1px);
+}
+
+.brand-tagline {
+  display: inline-block;
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 800;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  letter-spacing: 0.07em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .brand strong {
@@ -1346,12 +1365,12 @@ textarea {
 
 .social-rail {
   position: fixed;
-  left: 0;
+  left: 18px;
   top: auto;
-  bottom: 96px;
+  bottom: 24px;
   z-index: 60;
   display: grid;
-  gap: 78px;
+  gap: 10px;
 }
 
 .social-rail__item {
@@ -1361,21 +1380,27 @@ textarea {
 }
 
 .social-rail__button {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   display: grid;
   place-items: center;
   color: #ffffff;
-  border-radius: 0 16px 16px 0;
-  box-shadow: 0 14px 34px rgba(16, 29, 63, 0.2);
+  border-radius: 50%;
+  box-shadow:
+    0 10px 28px rgba(16, 29, 63, 0.32),
+    0 2px 6px rgba(16, 29, 63, 0.22);
   transition:
     transform 180ms ease,
-    filter 180ms ease;
+    filter 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .social-rail__button:hover {
-  filter: brightness(1.04);
-  transform: translateX(2px);
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 34px rgba(16, 29, 63, 0.4),
+    0 2px 6px rgba(16, 29, 63, 0.22);
 }
 
 .social-rail__button svg {
@@ -1395,10 +1420,10 @@ textarea {
 
 .social-notice {
   position: absolute;
-  left: 6px;
-  bottom: calc(100% + 14px);
-  top: auto;
-  min-width: 200px;
+  left: calc(100% + 14px);
+  top: 50%;
+  bottom: auto;
+  min-width: 206px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -1412,8 +1437,8 @@ textarea {
   font-weight: 900;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(8px) scale(0.92);
-  transform-origin: 28px bottom;
+  transform: translate(-12px, -50%) scale(0.92);
+  transform-origin: left center;
   transition:
     opacity 220ms ease,
     transform 220ms ease;
@@ -1427,7 +1452,7 @@ textarea {
 .social-notice.is-visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0) scale(1);
+  transform: translate(0, -50%) scale(1);
   animation: social-notice-pop 520ms cubic-bezier(0.2, 1.25, 0.35, 1) both;
 }
 
@@ -1439,15 +1464,15 @@ textarea {
 .social-notice::before {
   content: "";
   position: absolute;
-  left: 22px;
-  bottom: -7px;
-  top: auto;
+  left: -7px;
+  top: 50%;
+  bottom: auto;
   width: 12px;
   height: 12px;
   background: inherit;
-  border-right: 1px solid rgba(255, 255, 255, 0.28);
+  border-left: 1px solid rgba(255, 255, 255, 0.28);
   border-bottom: 1px solid rgba(255, 255, 255, 0.28);
-  transform: rotate(45deg);
+  transform: translateY(-50%) rotate(45deg);
 }
 
 .social-notice--instagram {
@@ -1517,40 +1542,40 @@ textarea {
 @keyframes social-notice-pop {
   0% {
     opacity: 0;
-    transform: translateY(12px) scale(0.86);
+    transform: translate(-18px, -50%) scale(0.86);
   }
 
   58% {
     opacity: 1;
-    transform: translateY(-3px) scale(1.04);
+    transform: translate(5px, -50%) scale(1.04);
   }
 
   78% {
-    transform: translateY(2px) scale(0.98);
+    transform: translate(-2px, -50%) scale(0.98);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(0, -50%) scale(1);
   }
 }
 
 @keyframes social-notice-pull-in {
   0% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(0, -50%) scale(1);
     filter: blur(0);
   }
 
   35% {
     opacity: 1;
-    transform: translateY(-3px) scale(1.02);
+    transform: translate(5px, -50%) scale(1.02);
     filter: blur(0);
   }
 
   100% {
     opacity: 0;
-    transform: translateY(28px) scale(0.18);
+    transform: translate(-54px, -50%) scale(0.18);
     filter: blur(2px);
   }
 }
@@ -1984,14 +2009,15 @@ textarea {
   }
 
   .social-rail {
+    left: 12px;
     top: auto;
-    bottom: 84px;
-    gap: 6px;
+    bottom: 16px;
+    gap: 8px;
   }
 
   .social-rail__button {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
   }
 
   .social-rail__button svg {
