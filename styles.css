@@ -81,10 +81,28 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(10, 22, 40, 0.96);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background:
+    linear-gradient(180deg, rgba(10, 22, 40, 0.97) 0%, rgba(10, 22, 40, 0.92) 100%);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.28);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 18px 40px rgba(5, 14, 32, 0.28);
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(201, 168, 76, 0.55) 30%,
+    rgba(232, 199, 110, 0.85) 50%,
+    rgba(201, 168, 76, 0.55) 70%,
+    transparent 100%);
+  pointer-events: none;
 }
 
 .top-icon-link {
@@ -128,10 +146,16 @@ textarea {
 
 .brand--logo img {
   display: block;
-  width: min(155px, 40vw);
+  width: min(168px, 42vw);
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
+  transition: filter 240ms ease, transform 240ms ease;
+}
+
+.brand--logo:hover img {
+  filter: drop-shadow(0 2px 10px rgba(201, 168, 76, 0.42)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+  transform: translateY(-1px);
 }
 
 .brand strong {
@@ -226,9 +250,11 @@ textarea {
 
 .hero__shade {
   background:
+    radial-gradient(ellipse 70% 80% at 78% 20%, rgba(201, 168, 76, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 100% at 50% 100%, rgba(5, 14, 32, 0.55) 0%, transparent 70%),
     linear-gradient(165deg, rgba(10, 22, 40, 0.55) 0%, rgba(10, 22, 40, 0.92) 60%, rgba(10, 22, 40, 0.98) 100%),
     linear-gradient(90deg, rgba(10, 22, 40, 0.9) 0%, rgba(15, 35, 71, 0.7) 50%, rgba(10, 22, 40, 0.85) 100%);
-  background-size: 100% 100%, 200% 100%;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 200% 100%;
   animation: heroGradientShift 24s ease-in-out infinite;
 }
 
@@ -319,15 +345,41 @@ textarea {
 }
 
 .button--primary {
+  position: relative;
+  overflow: hidden;
   color: var(--navy, #0a1628);
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold) 0%, #d9b75a 50%, var(--gold) 100%);
   border-color: var(--gold);
+  box-shadow:
+    0 6px 18px rgba(201, 168, 76, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  isolation: isolate;
+}
+
+.button--primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 720ms cubic-bezier(0.22, 0.7, 0.3, 1);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .button--primary:hover {
-  background: var(--gold-light);
+  background: linear-gradient(135deg, var(--gold-light) 0%, #f0d27a 50%, var(--gold-light) 100%);
   border-color: var(--gold-light);
-  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.35);
+  box-shadow:
+    0 14px 32px rgba(201, 168, 76, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.button--primary:hover::before {
+  transform: translateX(120%);
 }
 
 .button--submit {
@@ -398,19 +450,44 @@ textarea {
 }
 
 .quick-panel__grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   overflow: hidden;
-  background: var(--blue-deep);
-  border: 1px solid rgba(201, 168, 76, 0.2);
-  border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(10, 22, 40, 0.28);
+  background:
+    linear-gradient(135deg, rgba(201, 168, 76, 0.06) 0%, rgba(201, 168, 76, 0) 60%),
+    linear-gradient(180deg, #11244a 0%, var(--blue-deep) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.28);
+  border-radius: 18px;
+  box-shadow:
+    0 22px 56px rgba(10, 22, 40, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.quick-panel__grid::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(201, 168, 76, 0.6) 50%,
+    transparent);
+  pointer-events: none;
 }
 
 .quick-panel__grid div {
+  position: relative;
   min-height: 100px;
-  padding: 24px 22px;
+  padding: 28px 24px;
   border-right: 1px solid rgba(201, 168, 76, 0.15);
+  transition: background 240ms ease;
+}
+
+.quick-panel__grid div:hover {
+  background: rgba(201, 168, 76, 0.04);
 }
 
 .quick-panel__grid div:last-child {
@@ -427,6 +504,7 @@ textarea {
   font-size: 1.52rem;
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 700;
+  text-shadow: 0 2px 12px rgba(201, 168, 76, 0.22);
 }
 
 .quick-panel span {
@@ -502,11 +580,12 @@ textarea {
 .split h2::after {
   content: '';
   display: block;
-  width: 52px;
+  width: 56px;
   height: 3px;
-  background: var(--gold);
-  margin-top: 16px;
+  background: linear-gradient(90deg, var(--gold) 0%, #e8c76e 50%, var(--gold) 100%);
+  margin-top: 18px;
   border-radius: 2px;
+  box-shadow: 0 2px 10px rgba(201, 168, 76, 0.35);
 }
 
 .section__head p:not(.eyebrow),
@@ -1268,11 +1347,11 @@ textarea {
 .social-rail {
   position: fixed;
   left: 0;
-  top: 50%;
+  top: auto;
+  bottom: 96px;
   z-index: 60;
   display: grid;
-  gap: 8px;
-  transform: translateY(-50%);
+  gap: 78px;
 }
 
 .social-rail__item {
@@ -1316,9 +1395,10 @@ textarea {
 
 .social-notice {
   position: absolute;
-  left: 66px;
-  top: 50%;
-  min-width: 206px;
+  left: 6px;
+  bottom: calc(100% + 14px);
+  top: auto;
+  min-width: 200px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -1327,13 +1407,13 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 16px;
   box-shadow:
-    0 18px 46px rgba(16, 29, 63, 0.18),
+    0 18px 46px rgba(16, 29, 63, 0.28),
     0 1px 0 rgba(255, 255, 255, 0.28) inset;
   font-weight: 900;
   opacity: 0;
   pointer-events: none;
-  transform: translate(-16px, -50%) scale(0.92);
-  transform-origin: left center;
+  transform: translateY(8px) scale(0.92);
+  transform-origin: 28px bottom;
   transition:
     opacity 220ms ease,
     transform 220ms ease;
@@ -1347,7 +1427,7 @@ textarea {
 .social-notice.is-visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(0, -50%) scale(1);
+  transform: translateY(0) scale(1);
   animation: social-notice-pop 520ms cubic-bezier(0.2, 1.25, 0.35, 1) both;
 }
 
@@ -1359,14 +1439,15 @@ textarea {
 .social-notice::before {
   content: "";
   position: absolute;
-  left: -7px;
-  top: 50%;
+  left: 22px;
+  bottom: -7px;
+  top: auto;
   width: 12px;
   height: 12px;
   background: inherit;
-  border-left: 1px solid rgba(255, 255, 255, 0.28);
+  border-right: 1px solid rgba(255, 255, 255, 0.28);
   border-bottom: 1px solid rgba(255, 255, 255, 0.28);
-  transform: translateY(-50%) rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .social-notice--instagram {
@@ -1436,40 +1517,40 @@ textarea {
 @keyframes social-notice-pop {
   0% {
     opacity: 0;
-    transform: translate(-18px, -50%) scale(0.86);
+    transform: translateY(12px) scale(0.86);
   }
 
   58% {
     opacity: 1;
-    transform: translate(5px, -50%) scale(1.04);
+    transform: translateY(-3px) scale(1.04);
   }
 
   78% {
-    transform: translate(-2px, -50%) scale(0.98);
+    transform: translateY(2px) scale(0.98);
   }
 
   100% {
     opacity: 1;
-    transform: translate(0, -50%) scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes social-notice-pull-in {
   0% {
     opacity: 1;
-    transform: translate(0, -50%) scale(1);
+    transform: translateY(0) scale(1);
     filter: blur(0);
   }
 
   35% {
     opacity: 1;
-    transform: translate(5px, -50%) scale(1.02);
+    transform: translateY(-3px) scale(1.02);
     filter: blur(0);
   }
 
   100% {
     opacity: 0;
-    transform: translate(-54px, -50%) scale(0.18);
+    transform: translateY(28px) scale(0.18);
     filter: blur(2px);
   }
 }
@@ -1903,7 +1984,8 @@ textarea {
   }
 
   .social-rail {
-    top: 52%;
+    top: auto;
+    bottom: 84px;
     gap: 6px;
   }
 
