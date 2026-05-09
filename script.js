@@ -727,3 +727,19 @@ document.querySelectorAll("[data-assistant-prompt]").forEach((button) => {
     askAssistant(button.getAttribute("data-assistant-prompt") || "");
   });
 });
+
+// ── Scroll Reveal (IntersectionObserver) ──
+(function () {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+  );
+  document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+})();
