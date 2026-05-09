@@ -1,4 +1,4 @@
-const WHATSAPP_PHONE = "905493128520";
+const WHATSAPP_PHONE = "905464401780";
 const INSTAGRAM_URL = "https://www.instagram.com/sefakoymyfenbilimleri/";
 const SOCIAL_NOTICE_FIRST_DELAY = 5000;
 const SOCIAL_NOTICE_NEXT_DELAY = 5000;
@@ -22,7 +22,145 @@ const assistantMessages = document.querySelector("#assistantMessages");
 const assistantForm = document.querySelector("#assistantForm");
 const assistantInput = document.querySelector("#assistantInput");
 const socialNoticeCloseButtons = document.querySelectorAll("[data-social-notice-close]");
+const successCarousel = document.querySelector("[data-success-carousel]");
+const faqItems = document.querySelectorAll("[data-faq-item]");
 let assistantTyping = false;
+let whatsappNoticeTimer = null;
+
+const SUCCESS_PAGE_SIZE = 10;
+const SUCCESS_ROTATION_DELAY = 5000;
+const SUCCESS_TRANSITION_MS = 240;
+
+const successStudents = [
+  { name: "EFE CAN DEMİR", university: "AFYON KOCATEPE ÜNİ", department: "TIP" },
+  { name: "ALEYNA BULUT", university: "DİCLE ÜNİ", department: "TIP" },
+  { name: "MEHMET ALİ KARAKAYA", university: "MUĞLA ÜNİ", department: "TIP" },
+  { name: "HAMZA AKDOĞAN", university: "İSTANBUL ÜNİ", department: "DİŞ HEKİMLİĞİ" },
+  { name: "EMİN OSMAN ŞAHİN", university: "AYDIN ÜNİ", department: "DİŞ HEKİMLİĞİ" },
+  { name: "SENA ARPATEPE", university: "KENT ÜNİ", department: "DİŞ HEKİMLİĞİ" },
+  { name: "SEZİN SU UZUN", university: "İSTANBUL ÜNİ", department: "ECZACILIK" },
+  { name: "MUSTAFA ODABAŞI", university: "MARMARA ÜNİ", department: "ECZACILIK" },
+  { name: "ASMIN DEĞİRMENCİ", university: "TÜRK HAVA KURUMU", department: "PİLOTAJ" },
+  { name: "MERT ÇAĞAN BEKTAŞ", university: "İSTANBUL SABAHATTİN ZAİM ÜNİ", department: "HUKUK" },
+  { name: "GÖRKEM TAŞÇI", university: "BALIKESİR ÜNİ", department: "HUKUK" },
+  { name: "AKİF BEĞTAŞ", university: "HALİÇ ÜNİ", department: "YAZILIM MÜHENDİSLİĞİ" },
+  { name: "EMİR MUTLU", university: "İSTANBUL ÜNİ", department: "BİLGİSAYAR MÜHENDİSLİĞİ" },
+  { name: "BARIŞ YILMAZ", university: "İSTANBUL TEKNİK ÜNİ", department: "MATEMATİK MÜHENDİSLİĞİ" },
+  { name: "EREN ORUÇ", university: "İSTANBUL ÜNİ", department: "ELEKTRİK-ELEKTRONİK MÜHENDİSLİĞİ" },
+  { name: "MELEK İLERİ ALKAN", university: "NİŞANTAŞI ÜNİ", department: "BİLGİSAYAR MÜHENDİSLİĞİ" },
+  { name: "TAHA İLHAN", university: "NİŞANTAŞI ÜNİ", department: "YAZILIM MÜHENDİSLİĞİ" },
+  { name: "FATMA NEHİR PINARGÖZÜ", university: "HALİÇ ÜNİ", department: "YAZILIM MÜHENDİSLİĞİ" },
+  { name: "YUSUF ÖMER BAYAN", university: "ESKİŞEHİR TEKNİK ÜNİ", department: "ÇEVRE MÜHENDİSLİĞİ" },
+  { name: "MERYEM GÜL YILDIRIM", university: "YILDIZ TEKNİK ÜNİ", department: "KİMYA MÜHENDİSLİĞİ" },
+  { name: "SELEN KARADEMİR", university: "NİŞANTAŞI ÜNİ", department: "PSİKOLOJİ" },
+  { name: "BEDİRHAN ELMAS", university: "NİŞANTAŞI ÜNİ", department: "PSİKOLOJİ" },
+  { name: "İSRA CEMRE UNSUR", university: "YENİYÜZYIL ÜNİ", department: "PSİKOLOJİ" },
+  { name: "BİLGE AĞUR", university: "AYDIN ÜNİ", department: "PSİKOLOJİ" },
+  { name: "ABDULLAH DOĞAN", university: "GELİŞİM ÜNİ", department: "SİYASET BİLİMİ VE ULUSLARARASI İLİŞKİLER" },
+  { name: "EMİRHAN DURMAZ", university: "MEDİPOL ÜNİ", department: "SOSYAL HİZMETLER" },
+  { name: "BETÜL ÇEVİK", university: "İSTANBUL ÜNİ", department: "BİLGİ VE BELGE YÖNETİMİ" },
+  { name: "BERAAT YOLCU", university: "AYDIN ÜNİ", department: "YÖNETİM BİLİŞİM SİSTEMLERİ" },
+  { name: "GAMZE NUR IŞIK", university: "KARADENİZ TEKNİK ÜNİ", department: "TÜRK DİLİ VE EDEBİYATI" },
+  { name: "MUHAMMED ODABAŞI", university: "MARMARA ÜNİ", department: "SOSYAL BİLGİLER ÖĞRETMENLİĞİ" },
+  { name: "SUDE AKSÖYEK", university: "SÜLEYMAN DEMİREL ÜNİ", department: "KİMYA MÜHENDİSLİĞİ" },
+  { name: "YAĞMUR OĞRAŞ", university: "AYDIN ÜNİ", department: "GASTRONOMİ" },
+  { name: "HÜSNÜFER CANSEVER", university: "GELİŞİM ÜNİ", department: "BESLENME VE DİYETETİK" },
+  { name: "MUHAMMET YİĞİT KOÇAK", university: "AYDIN ÜNİ", department: "SİYASET BİLİMİ VE ULUSLARARASI İLİŞKİLER" },
+  { name: "RECEP ALTAY", university: "ULUDAĞ ÜNİ", department: "MALİYE" },
+  { name: "AZRA BİROL", university: "KENT ÜNİ", department: "SİYASET BİLİMİ VE KAMU YÖNETİMİ" },
+  { name: "ESİN SELVİ", university: "YILDIZ TEKNİK ÜNİ", department: "KİMYA MÜHENDİSLİĞİ" },
+  { name: "ABDÜLKADİR BİTİGEN", university: "YILDIZ TEKNİK ÜNİ", department: "MATEMATİK" },
+  { name: "ENES GÜN", university: "NAMIK KEMAL ÜNİ", department: "BİLGİSAYAR MÜHENDİSLİĞİ" },
+  { name: "ÖMER MERT KÜLTE", university: "GEBZE TEKNİK ÜNİ", department: "MAKİNE MÜHENDİSLİĞİ" },
+  { name: "EMİR AKIN", university: "CELAL BAYAR ÜNİ", department: "YAZILIM MÜHENDİSLİĞİ" },
+  { name: "YAĞMUR ALVER", university: "BOĞAZİÇİ ÜNİ", department: "FEN BİLGİSİ ÖĞRETMENLİĞİ" },
+  { name: "AHMET BEKTAŞ", university: "MARMARA ÜNİ", department: "İLKÖĞRETİM MATEMATİK ÖĞRETMENLİĞİ" },
+  { name: "EREN PARLAK", university: "MARMARA ÜNİ", department: "SINIF ÖĞRETMENLİĞİ" },
+  { name: "MELEK GÜRCAN", university: "DOKUZ EYLÜL ÜNİ", department: "İNGİLİZCE ÖĞRETMENLİĞİ" },
+  { name: "ZEYNEP AYDIN", university: "DOKUZ EYLÜL ÜNİ", department: "OKUL ÖNCESİ ÖĞRETMENLİĞİ" },
+  { name: "ESMA BAŞ", university: "BOLU ABANT ÜNİ", department: "OKUL ÖNCESİ ÖĞRETMENLİĞİ" },
+  { name: "EMRE MUMCU", university: "AYDIN ÜNİ", department: "VETERİNERLİK" },
+  { name: "HAMZA KAĞAN TAPTIK", university: "NAMIK KEMAL ÜNİ", department: "VETERİNERLİK" },
+  { name: "SILA SELİN ÖZKAN", university: "MEDENİYET ÜNİ", department: "HEMŞİRELİK" },
+  { name: "ONUR SAVAŞ", university: "AYDIN ÜNİ", department: "HEMŞİRELİK" },
+  { name: "BERSU NEHİR", university: "BOĞAZİÇİ ÜNİ", department: "PSİKOLOJİ" },
+  { name: "SELİN DEMİREL", university: "YILDIZ TEKNİK ÜNİ", department: "PDR" },
+  { name: "İLKNUR PALABIYIK", university: "YILDIZ TEKNİK ÜNİ", department: "İKTİSAT" },
+  { name: "KÜBRANUR DURSUN", university: "İSTANBUL SABAHATTİN ZAİM ÜNİ", department: "PDR" },
+  { name: "BERRU HÜRREM BİTİGEN", university: "İSTANBUL ÜNİ", department: "SİYASET BİLİMİ VE ULUSLARARASI İLİŞKİLER" },
+];
+
+const universityLogos = {
+  "AFYON KOCATEPE ÜNİ": "AKÜ",
+  "DİCLE ÜNİ": "DÜ",
+  "MUĞLA ÜNİ": "MSKÜ",
+  "İSTANBUL ÜNİ": "İÜ",
+  "AYDIN ÜNİ": "İAÜ",
+  "KENT ÜNİ": "KENT",
+  "MARMARA ÜNİ": "MÜ",
+  "TÜRK HAVA KURUMU": "THK",
+  "İSTANBUL SABAHATTİN ZAİM ÜNİ": "İZÜ",
+  "BALIKESİR ÜNİ": "BAÜN",
+  "HALİÇ ÜNİ": "HÜ",
+  "İSTANBUL TEKNİK ÜNİ": "İTÜ",
+  "NİŞANTAŞI ÜNİ": "NÜ",
+  "ESKİŞEHİR TEKNİK ÜNİ": "ESTÜ",
+  "YILDIZ TEKNİK ÜNİ": "YTÜ",
+  "YENİYÜZYIL ÜNİ": "YYÜ",
+  "GELİŞİM ÜNİ": "İGÜ",
+  "MEDİPOL ÜNİ": "MED",
+  "KARADENİZ TEKNİK ÜNİ": "KTÜ",
+  "SÜLEYMAN DEMİREL ÜNİ": "SDÜ",
+  "ULUDAĞ ÜNİ": "UÜ",
+  "NAMIK KEMAL ÜNİ": "NKÜ",
+  "GEBZE TEKNİK ÜNİ": "GTÜ",
+  "CELAL BAYAR ÜNİ": "CBÜ",
+  "BOĞAZİÇİ ÜNİ": "BÜ",
+  "DOKUZ EYLÜL ÜNİ": "DEÜ",
+  "BOLU ABANT ÜNİ": "BAİBÜ",
+  "MEDENİYET ÜNİ": "İMÜ",
+};
+
+const universityLogoImages = {
+  "AFYON KOCATEPE ÜNİ": "assets/universities/afyon-kocatepe.png",
+  "AYDIN ÜNİ": "assets/universities/aydin.jpg",
+  "BALIKESİR ÜNİ": "assets/universities/balikesir.png",
+  "BOĞAZİÇİ ÜNİ": "assets/universities/bogazici.png",
+  "BOLU ABANT ÜNİ": "assets/universities/bolu-abant.png",
+  "CELAL BAYAR ÜNİ": "assets/universities/celal-bayar.png",
+  "DİCLE ÜNİ": "assets/universities/dicle.png",
+  "DOKUZ EYLÜL ÜNİ": "assets/universities/dokuz-eylul.jpg",
+  "ESKİŞEHİR TEKNİK ÜNİ": "assets/universities/eskisehir-teknik.png",
+  "GEBZE TEKNİK ÜNİ": "assets/universities/gebze-teknik.png",
+  "GELİŞİM ÜNİ": "assets/universities/gelisim.png",
+  "HALİÇ ÜNİ": "assets/universities/halic.png",
+  "İSTANBUL SABAHATTİN ZAİM ÜNİ": "assets/universities/sabahattin-zaim.png",
+  "İSTANBUL TEKNİK ÜNİ": "assets/universities/istanbul-teknik.png",
+  "İSTANBUL ÜNİ": "assets/universities/istanbul-universitesi.png",
+  "KARADENİZ TEKNİK ÜNİ": "assets/universities/karadeniz-teknik.png",
+  "KENT ÜNİ": "assets/universities/kent.png",
+  "MARMARA ÜNİ": "assets/universities/marmara.png",
+  "MEDENİYET ÜNİ": "assets/universities/medeniyet.png",
+  "MEDİPOL ÜNİ": "assets/universities/medipol.jpg",
+  "MUĞLA ÜNİ": "assets/universities/mugla.png",
+  "NAMIK KEMAL ÜNİ": "assets/universities/namik-kemal.png",
+  "NİŞANTAŞI ÜNİ": "assets/universities/nisantasi.png",
+  "SÜLEYMAN DEMİREL ÜNİ": "assets/universities/suleyman-demirel.png",
+  "TÜRK HAVA KURUMU": "assets/universities/turk-hava-kurumu.png",
+  "ULUDAĞ ÜNİ": "assets/universities/uludag.png",
+  "YENİYÜZYIL ÜNİ": "assets/universities/yeniyuzyil.png",
+  "YILDIZ TEKNİK ÜNİ": "assets/universities/yildiz-teknik.png",
+};
+
+const logoThemes = [
+  ["#1e40af", "#ef4444"],
+  ["#10233f", "#2563eb"],
+  ["#b91c1c", "#1d4ed8"],
+  ["#0f766e", "#2563eb"],
+  ["#7c2d12", "#dc2626"],
+  ["#3730a3", "#e11d48"],
+  ["#0f172a", "#475569"],
+];
 
 const buildWhatsappUrl = (message = DEFAULT_MESSAGE) =>
   `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
@@ -43,21 +181,120 @@ const setInstagramLinks = () => {
   });
 };
 
+const escapeHtml = (value) =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+const getLogoTheme = (university) => {
+  const total = Array.from(university).reduce((sum, letter) => sum + letter.charCodeAt(0), 0);
+  return logoThemes[total % logoThemes.length];
+};
+
+const getLogoSuccessStudents = () =>
+  successStudents.filter((student) => universityLogoImages[student.university]);
+
+const renderSuccessStudents = (page = 0) => {
+  const logoStudents = getLogoSuccessStudents();
+  if (!successCarousel || !logoStudents.length) return;
+
+  const maxStartIndex = Math.max(logoStudents.length - SUCCESS_PAGE_SIZE, 0);
+  const startIndex = Math.min(page * SUCCESS_PAGE_SIZE, maxStartIndex);
+  const students = Array.from({ length: SUCCESS_PAGE_SIZE }, (_, index) =>
+    logoStudents[(startIndex + index) % logoStudents.length],
+  );
+
+  const cards = students
+    .map((student) => {
+      const [logoA, logoB] = getLogoTheme(student.university);
+      const logo = universityLogos[student.university] || student.university.slice(0, 3);
+      const logoSrc = universityLogoImages[student.university];
+      const logoImage = logoSrc
+        ? `<img src="${escapeHtml(logoSrc)}" alt="" loading="lazy" onerror="this.remove()">`
+        : "";
+
+      return `
+        <article class="success-card">
+          <span class="success-logo" style="--logo-a: ${logoA}; --logo-b: ${logoB};" aria-label="${escapeHtml(student.university)} logosu">
+            ${logoImage}
+            <span>${escapeHtml(logo)}</span>
+          </span>
+          <strong>${escapeHtml(student.name)}</strong>
+          <p class="success-school">${escapeHtml(student.university)}</p>
+          <p class="success-department">${escapeHtml(student.department)}</p>
+        </article>
+      `;
+    })
+    .join("");
+
+  successCarousel.innerHTML = `<div class="success-grid">${cards}</div>`;
+};
+
+const startSuccessCarousel = () => {
+  if (!successCarousel) return;
+
+  const logoStudents = getLogoSuccessStudents();
+  let page = 0;
+  const pageCount = Math.ceil(logoStudents.length / SUCCESS_PAGE_SIZE);
+
+  renderSuccessStudents(page);
+
+  if (pageCount <= 1) return;
+
+  window.setInterval(() => {
+    const currentGrid = successCarousel.querySelector(".success-grid");
+    currentGrid?.classList.add("is-leaving");
+
+    window.setTimeout(() => {
+      page = (page + 1) % pageCount;
+      renderSuccessStudents(page);
+
+      const nextGrid = successCarousel.querySelector(".success-grid");
+      if (nextGrid) {
+        nextGrid.classList.add("is-entering");
+        void nextGrid.offsetWidth;
+        nextGrid.classList.remove("is-entering");
+      }
+    }, SUCCESS_TRANSITION_MS);
+  }, SUCCESS_ROTATION_DELAY);
+};
+
 const getSocialNotice = (name) =>
   document.querySelector(`[data-social-notice="${name}"]`);
 
 const showSocialNotice = (name) => {
   const notice = getSocialNotice(name);
   if (!notice) return;
+  document.querySelectorAll("[data-social-notice]").forEach((item) => {
+    if (item !== notice) {
+      item.classList.remove("is-visible", "is-closing");
+      item.setAttribute("hidden", "");
+    }
+  });
+  notice.classList.remove("is-closing");
   notice.removeAttribute("hidden");
   window.requestAnimationFrame(() => notice.classList.add("is-visible"));
 };
 
-const hideSocialNotice = (notice) => {
+const hideSocialNotice = (notice, onHidden) => {
   notice.classList.remove("is-visible");
+  notice.classList.add("is-closing");
   window.setTimeout(() => {
+    notice.classList.remove("is-closing");
     notice.setAttribute("hidden", "");
-  }, 220);
+    if (onHidden) onHidden();
+  }, 360);
+};
+
+const scheduleWhatsappNotice = () => {
+  if (whatsappNoticeTimer) window.clearTimeout(whatsappNoticeTimer);
+  whatsappNoticeTimer = window.setTimeout(() => {
+    showSocialNotice("whatsapp");
+    whatsappNoticeTimer = null;
+  }, SOCIAL_NOTICE_NEXT_DELAY);
 };
 
 const scheduleSocialNotices = () => {
@@ -67,11 +304,42 @@ const scheduleSocialNotices = () => {
     window.setTimeout(() => {
       const instagramNotice = getSocialNotice("instagram");
       if (instagramNotice && instagramNotice.classList.contains("is-visible")) {
-        hideSocialNotice(instagramNotice);
+        hideSocialNotice(instagramNotice, scheduleWhatsappNotice);
+        return;
       }
-      showSocialNotice("whatsapp");
+      scheduleWhatsappNotice();
     }, SOCIAL_NOTICE_NEXT_DELAY);
   }, SOCIAL_NOTICE_FIRST_DELAY);
+};
+
+const setupFaqAnimations = () => {
+  faqItems.forEach((item) => {
+    const button = item.querySelector("[data-faq-question]");
+    const answer = item.querySelector("[data-faq-answer]");
+    if (!button || !answer) return;
+
+    const setAnswerHeight = () => {
+      answer.style.maxHeight = item.classList.contains("is-open") ? `${answer.scrollHeight}px` : "0px";
+    };
+
+    setAnswerHeight();
+
+    button.addEventListener("click", () => {
+      const isOpen = item.classList.toggle("is-open");
+      button.setAttribute("aria-expanded", String(isOpen));
+      answer.setAttribute("aria-hidden", String(!isOpen));
+      setAnswerHeight();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    faqItems.forEach((item) => {
+      const answer = item.querySelector("[data-faq-answer]");
+      if (answer && item.classList.contains("is-open")) {
+        answer.style.maxHeight = `${answer.scrollHeight}px`;
+      }
+    });
+  });
 };
 
 const showStatus = (message, isError = false) => {
@@ -147,7 +415,7 @@ const assistantRules = [
     priority: 3,
     keywords: ["basari", "başarı", "kazanan", "yerlesen", "yerleşen", "derece", "sonuclar", "sonuçlar"],
     answer:
-      "Başarılı öğrenciler bölümü şimdilik örnek listeyle hazırlandı. Gerçek liste geldiğinde öğrencilerin isimleri ve kazandıkları okul veya bölümler bu alanda güncellenecek.",
+      "Başarılı öğrenciler bölümünde yalnızca logosu eklenen üniversitelerdeki öğrenciler büyük logolu kartlarla gösteriliyor. Kartlar 10'lu gruplar halinde sağdan sola doğru değişiyor.",
   },
   {
     priority: 5,
@@ -195,7 +463,7 @@ const assistantRules = [
     priority: 3,
     keywords: ["telefon", "whatsapp", "ara", "iletisim", "iletişim"],
     answer:
-      "Telefon numaraları 0549 312 85 20 ve 0212 592 91 98. Hızlı dönüş için WhatsApp üzerinden yazabilir ya da ön kayıt formunu doldurup talebinizi kuruma iletebilirsiniz.",
+      "Telefon ve WhatsApp hattı +90 546 440 17 80. Hızlı dönüş için WhatsApp üzerinden yazabilir ya da ön kayıt formunu doldurup talebinizi kuruma iletebilirsiniz.",
   },
   {
     priority: 3,
@@ -290,12 +558,16 @@ const askAssistant = (question) => {
 
 setWhatsappLinks();
 setInstagramLinks();
+startSuccessCarousel();
 scheduleSocialNotices();
+setupFaqAnimations();
 
 socialNoticeCloseButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const notice = button.closest("[data-social-notice]");
-    if (notice) hideSocialNotice(notice);
+    if (!notice) return;
+    const isInstagramNotice = notice.getAttribute("data-social-notice") === "instagram";
+    hideSocialNotice(notice, isInstagramNotice ? scheduleWhatsappNotice : undefined);
   });
 });
 
