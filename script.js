@@ -559,7 +559,6 @@ const askAssistant = (question) => {
 setWhatsappLinks();
 setInstagramLinks();
 startSuccessCarousel();
-scheduleSocialNotices();
 setupFaqAnimations();
 
 socialNoticeCloseButtons.forEach((button) => {

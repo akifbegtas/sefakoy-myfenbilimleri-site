@@ -1446,13 +1446,21 @@ textarea {
 }
 
 .social-notice[hidden] {
-  display: none;
+  display: inline-flex;
 }
 
-.social-notice.is-visible {
+.social-rail__item:hover .social-notice[hidden] {
+  display: inline-flex;
+}
+
+.social-notice.is-visible,
+.social-rail__item:hover .social-notice {
   opacity: 1;
   pointer-events: auto;
   transform: translate(0, -50%) scale(1);
+}
+
+.social-notice.is-visible {
   animation: social-notice-pop 520ms cubic-bezier(0.2, 1.25, 0.35, 1) both;
 }
 
