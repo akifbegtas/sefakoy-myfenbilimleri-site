@@ -742,3 +742,74 @@ document.querySelectorAll("[data-assistant-prompt]").forEach((button) => {
   );
   document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 })();
+
+// ── Nav compact on scroll ──
+(function () {
+  const header = document.querySelector(".site-header");
+  if (!header) return;
+  const onScroll = () => {
+    header.classList.toggle("is-compact", window.scrollY > 60);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+})();
+
+// ── Counter animation for quick-panel stats ──
+(function () {
+  const counters = [
+    { selector: ".quick-panel__grid div:nth-child(1) strong", target: 18, suffix: " yıl", duration: 1400 },
+    { selector: ".quick-panel__grid div:nth-child(2) strong", target: 12, suffix: " kişilik", duration: 1200 },
+    { selector: ".quick-panel__grid div:nth-child(3) strong", target: 35, prefix: "", suffix: "+ deneme", duration: 1600 },
+  ];
+
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+  const animateCounter = (el, target, suffix, prefix, duration) => {
+    const start = performance.now();
+    const tick = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = Math.round(easeOut(progress) * target);
+      el.textContent = (prefix || "") + value + suffix;
+      if (progress < 1) window.requestAnimationFrame(tick);
+    };
+    window.requestAnimationFrame(tick);
+  };
+
+  const panel = document.querySelector(".quick-panel__grid");
+  if (!panel) return;
+
+  let triggered = false;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !triggered) {
+        triggered = true;
+        counters.forEach(({ selector, target, suffix, prefix, duration }) => {
+          const el = document.querySelector(selector);
+          if (el) animateCounter(el, target, suffix, prefix, duration);
+        });
+        observer.disconnect();
+      }
+    },
+    { threshold: 0.4 }
+  );
+  observer.observe(panel);
+})();
+
+// ── Progress bar animation ──
+(function () {
+  const rows = document.querySelectorAll(".progress-row");
+  if (!rows.length) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-animated");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+  rows.forEach((row) => observer.observe(row));
+})();

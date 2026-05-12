@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=4" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -64,7 +64,7 @@
     <header class="site-header" id="top">
       <nav class="nav-shell" aria-label="Ana menü">
         <a class="brand brand--logo" href="#top" aria-label="Sefaköy My Fen Bilimleri anasayfa">
-          <img src="assets/sefakoy-myfen-header-logo.png" alt="Sefaköy My Fen Bilimleri" />
+          <img src="assets/logo-main.png" alt="Sefaköy My Fen Bilimleri" />
         </a>
         <button class="nav-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false">
           <span></span>
@@ -73,10 +73,7 @@
         </button>
         <div class="nav-links" data-nav-links>
           <a href="#programlar">Programlar</a>
-          <a href="#sistem">Başarı sistemi</a>
-          <a href="#basarilar">Başarılar</a>
           <a href="#kayit">Ön kayıt</a>
-          <a href="#yorumlar">Yorumlar</a>
           <a href="#duyurular">Duyurular</a>
           <a href="#iletisim">İletişim</a>
         </div>
@@ -280,27 +277,50 @@
         </div>
       </section>
 
-      <section class="section section--dark" id="duyurular">
-        <div class="container section__head section__head--dark">
-          <p class="eyebrow">Duyurular ve dönem akışı</p>
-          <h2>Site canlıya çıktığında duyurular buradan yönetilir</h2>
-        </div>
-        <div class=”container notice-grid”>
-          <article class=”notice reveal”>
-            <span>Yeni dönem</span>
-            <h3>2026 LGS ve YKS erken kayıt görüşmeleri</h3>
-            <p>Kontenjan, sınıf seviyesi ve hedef okul görüşmesi için ön kayıt formu açıldı.</p>
-          </article>
-          <article class=”notice reveal reveal--delay-1”>
-            <span>Bursluluk</span>
-            <h3>Bursluluk sınavı talep listesi</h3>
-            <p>Formdan “bursluluk sınavı” seçen velilere sınav günü ve saat bilgisi gönderilir.</p>
-          </article>
-          <article class=”notice reveal reveal--delay-2”>
-            <span>Deneme</span>
-            <h3>Haftalık deneme kulübü takvimi</h3>
-            <p>TYT, AYT ve LGS denemeleri için kontenjan ve sonuç analiz ekranı hazırlanır.</p>
-          </article>
+      <section class=”section section--dark” id=”duyurular” style=”background:red !important;color:#fff;padding:96px 0;”>
+        <div class=”container”>
+          <div class=”announce-header”>
+            <div>
+              <p class=”eyebrow”>Duyurular ve dönem akışı</p>
+              <h2 class=”announce-title”>Güncel <span class=”announce-title__accent”>Duyurular</span></h2>
+            </div>
+            <a href=”#kayit” class=”button button--outline-gold button--sm”>Ön Kayıt Oluştur</a>
+          </div>
+
+          <div class=”announce-grid”>
+            <article class=”announce-card announce-card--featured”>
+              <div class=”announce-card__badge announce-card__badge--new”>Yeni Dönem</div>
+              <div class=”announce-card__icon”>📋</div>
+              <h3>2026 LGS ve YKS erken kayıt görüşmeleri</h3>
+              <p>Kontenjan, sınıf seviyesi ve hedef okul görüşmesi için ön kayıt formu açıldı.</p>
+              <div class=”announce-card__footer”>
+                <span class=”announce-card__date”>Mayıs 2026</span>
+                <a href=”#kayit” class=”announce-card__link”>Kayıt ol →</a>
+              </div>
+            </article>
+
+            <article class=”announce-card”>
+              <div class=”announce-card__badge announce-card__badge--gold”>Bursluluk</div>
+              <div class=”announce-card__icon”>🏆</div>
+              <h3>Bursluluk sınavı talep listesi</h3>
+              <p>Formdan “bursluluk sınavı” seçen velilere sınav günü ve saat bilgisi gönderilir.</p>
+              <div class=”announce-card__footer”>
+                <span class=”announce-card__date”>Haziran 2026</span>
+                <a href=”#kayit” class=”announce-card__link”>Başvur →</a>
+              </div>
+            </article>
+
+            <article class=”announce-card”>
+              <div class=”announce-card__badge”>Deneme</div>
+              <div class=”announce-card__icon”>📊</div>
+              <h3>Haftalık deneme kulübü takvimi</h3>
+              <p>TYT, AYT ve LGS denemeleri için kontenjan ve sonuç analiz ekranı hazırlanır.</p>
+              <div class=”announce-card__footer”>
+                <span class=”announce-card__date”>Tüm dönem</span>
+                <a href=”#kayit” class=”announce-card__link”>İncele →</a>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -534,7 +554,7 @@
     <footer class="site-footer">
       <div class="container footer-grid">
         <div>
-          <img class="footer-brand-logo" src="assets/sefakoy-myfen-header-logo.png" alt="Sefaköy My Fen Bilimleri" />
+          <img class="footer-brand-logo" src="assets/logo-main.png" alt="Sefaköy My Fen Bilimleri" />
           <p>LGS, YKS, ara sınıf, deneme kulübü, özel ders ve rehberlik odaklı eğitim kurumu — Sefaköy, İstanbul.</p>
         </div>
         <div>
