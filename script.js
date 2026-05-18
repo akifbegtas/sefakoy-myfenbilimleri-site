@@ -6,6 +6,11 @@ const ASSISTANT_ANIMATION_MS = 320;
 const DEFAULT_MESSAGE =
   "Merhaba, Sefaköy My Fen Bilimleri hakkında bilgi almak istiyorum.";
 
+// Google Apps Script Web App URL'i — Apps Script deploy edildikten sonra
+// "https://script.google.com/macros/s/.../exec" formatındaki linki buraya yapıştır.
+// Boş bırakılırsa form yalnızca localStorage + WhatsApp davranışıyla çalışır.
+const LEAD_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzG7bg7eeeXg25X_qWX2_GTnDpg_zZMWHPK4Ars61vwUpsxdT49lBEYz3B2P1CfxyJR/exec";
+
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector("[data-nav-links]");
 const leadForm = document.querySelector("#leadForm");
@@ -620,6 +625,15 @@ if (leadForm) {
 
     saveLead(lead);
 
+    if (LEAD_WEBHOOK_URL) {
+      fetch(LEAD_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(lead),
+      }).catch((err) => console.warn("Lead webhook hatası:", err));
+    }
+
     const message = formatLeadMessage(lead);
     leadCode.textContent = `Talep No: ${lead.code}`;
     leadSummary.textContent = `${lead.studentName} için ${lead.program} kaydı hazırlandı.`;
@@ -813,3 +827,34 @@ document.querySelectorAll("[data-assistant-prompt]").forEach((button) => {
   );
   rows.forEach((row) => observer.observe(row));
 })();
+
+// ── PHASE 5: Hero carousel + Neden MyFen reason carousel ──
+function startHeroCarousel() {
+  const root = document.querySelector("[data-hero-carousel]");
+  if (!root) return;
+  const slides = Array.from(root.querySelectorAll(".hero-slide"));
+  if (slides.length < 2) return;
+  let idx = 0;
+  window.setInterval(() => {
+    slides[idx].classList.remove("is-active");
+    idx = (idx + 1) % slides.length;
+    slides[idx].classList.add("is-active");
+  }, 4500);
+}
+
+function startReasonCarousel() {
+  const root = document.querySelector("[data-reason-carousel]");
+  if (!root) return;
+  const slides = Array.from(root.querySelectorAll(".reason-slide"));
+  if (slides.length < 2) return;
+  let idx = 0;
+  slides[0].classList.add("is-active");
+  window.setInterval(() => {
+    slides[idx].classList.remove("is-active");
+    idx = (idx + 1) % slides.length;
+    slides[idx].classList.add("is-active");
+  }, 4000);
+}
+
+startHeroCarousel();
+startReasonCarousel();

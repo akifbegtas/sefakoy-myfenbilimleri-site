@@ -289,13 +289,7 @@ textarea {
 }
 
 .hero__shade {
-  background:
-    radial-gradient(ellipse 70% 80% at 78% 20%, rgba(201, 168, 76, 0.13) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 100% at 50% 100%, rgba(5, 12, 28, 0.58) 0%, transparent 70%),
-    linear-gradient(165deg, rgba(8, 16, 31, 0.5) 0%, rgba(8, 16, 31, 0.92) 60%, rgba(8, 16, 31, 0.98) 100%),
-    linear-gradient(90deg, rgba(8, 16, 31, 0.92) 0%, rgba(12, 26, 60, 0.72) 50%, rgba(8, 16, 31, 0.88) 100%);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 200% 100%;
-  animation: heroGradientShift 24s ease-in-out infinite;
+  background: linear-gradient(180deg, rgba(8, 16, 31, 0.18) 0%, rgba(8, 16, 31, 0.35) 45%, rgba(8, 16, 31, 0.72) 100%);
 }
 
 @keyframes heroGradientShift {
@@ -2558,5 +2552,514 @@ textarea {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ============================================================
+   PHASE 5: Multi-page restructure additions (v5)
+   ============================================================ */
+
+/* Hero carousel — cross-fade slides under existing hero__shade */
+.hero-carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hero-slide.is-active {
+  opacity: 1;
+}
+.hero-slide__title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 16px));
+  z-index: 3;
+  max-width: calc(100vw - 48px);
+  color: #fff;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 4.5vw, 3.4rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: center;
+  padding: 14px 28px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.78), 0 2px 6px rgba(0,0,0,0.6);
+  opacity: 0;
+  transition: opacity 0.9s ease 0.3s, transform 0.9s ease 0.3s;
+  pointer-events: none;
+}
+.hero-slide.is-active .hero-slide__title {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+@media (max-width: 640px) {
+  .hero-slide__title {
+    font-size: clamp(1.4rem, 5.5vw, 2rem);
+    padding: 10px 18px;
+  }
+}
+
+/* Active nav link highlight */
+.nav-links a[aria-current="page"] {
+  color: var(--gold);
+  position: relative;
+}
+.nav-links a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+/* Generic page-hero (for sub-pages) */
+.page-hero {
+  padding: 120px 0 56px;
+  background: linear-gradient(180deg, var(--blue-light) 0%, var(--cream) 100%);
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 12px 0 16px;
+  color: var(--blue);
+}
+.page-hero__lead {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 720px;
+}
+.page-hero--dark {
+  background: linear-gradient(180deg, var(--blue-deep) 0%, var(--blue) 100%);
+  color: #fff;
+}
+.page-hero--dark h1,
+.page-hero--dark .eyebrow {
+  color: #fff;
+}
+.page-hero--dark .page-hero__lead {
+  color: rgba(255,255,255,0.85);
+}
+
+/* Hakkımızda — about-portrait */
+.about-portrait {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.about-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.about-portrait__caption {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  background: rgba(8,16,31,0.78);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+/* Hakkımızda — değerler grid */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+  margin-top: 24px;
+}
+.value-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.value-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.value-card__icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+.value-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+.value-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Section CTA (Hakkımızda + Neden MyFen sayfa altları) */
+.section--contact-cta {
+  padding: 72px 0;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--blue-light) 100%);
+  text-align: center;
+}
+
+/* Neden MyFen — reason carousel (single slide visible, others fade out) */
+.reason-carousel {
+  position: relative;
+  min-height: 320px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue) 100%);
+  color: #fff;
+  padding: 48px clamp(24px, 5vw, 64px);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.reason-slide {
+  position: absolute;
+  inset: 0;
+  padding: 48px clamp(24px, 5vw, 64px);
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.reason-slide.is-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.reason-slide__num {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--gold-light);
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+}
+.reason-slide__icon {
+  font-size: 2.6rem;
+  margin: 12px 0;
+}
+.reason-slide h2 {
+  margin: 0 0 16px;
+  color: #fff;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+.reason-slide p {
+  margin: 0;
+  color: rgba(255,255,255,0.86);
+  font-size: 1.05rem;
+  max-width: 720px;
+  line-height: 1.65;
+}
+
+/* Neden MyFen — alttaki grid */
+.reason-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
+  margin-top: 24px;
+}
+.reason-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.reason-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.reason-card__icon {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+.reason-card h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+.reason-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .reason-carousel {
+    min-height: 380px;
+  }
+}
+
+/* ============================================================
+   PHASE 5b: Mobile responsiveness fixes (v5)
+   ============================================================ */
+@media (max-width: 760px) {
+  /* Mobile'da hero scroll arrow gizle (title alta yerleşecek) */
+  .hero__scroll {
+    display: none;
+  }
+
+  /* Hero slide title mobile — ortada büyük başlık */
+  .hero-slide__title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    padding: 12px 20px;
+    max-width: calc(100vw - 32px);
+    white-space: normal;
+  }
+
+  /* Split layouts mobile'da tek sütun */
+  .split,
+  .form-layout,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* About portrait mobile'da boy ayarı */
+  .about-portrait {
+    max-height: 360px;
+  }
+  .about-portrait img {
+    max-height: 360px;
+  }
+
+  /* Page hero padding'i mobile'da daha sıkı */
+  .page-hero {
+    padding: 88px 0 40px;
+  }
+  .page-hero h1 {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    line-height: 1.2;
+  }
+  .page-hero__lead {
+    font-size: 1rem;
+  }
+
+  /* Değerler grid mobile'da tek sütun */
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .value-card {
+    padding: 20px;
+  }
+
+  /* Neden MyFen — reason carousel mobile'da daha yüksek (içerik sığsın) */
+  .reason-carousel {
+    min-height: 460px;
+    padding: 36px 22px;
+    border-radius: 18px;
+  }
+  .reason-slide {
+    padding: 36px 22px;
+  }
+  .reason-slide__icon {
+    font-size: 2.2rem;
+    margin: 8px 0;
+  }
+  .reason-slide h2 {
+    font-size: 1.45rem;
+    margin-bottom: 12px;
+  }
+  .reason-slide p {
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  /* Reason grid mobile'da tek sütun (auto-fit 240px geniş kalıyor) */
+  .reason-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .reason-card {
+    padding: 18px;
+  }
+
+  /* Contact CTA mobile için padding azalt */
+  .section--contact-cta {
+    padding: 56px 0;
+  }
+
+  /* Footer linklerinde dikey gap */
+  .footer-grid > div {
+    display: grid;
+    gap: 8px;
+  }
+  .footer-grid a {
+    padding: 4px 0;
+  }
+
+  /* aria-current page link mobile'da underline kalsın */
+  .nav-links a[aria-current="page"] {
+    background: rgba(201, 168, 76, 0.12);
+  }
+  .nav-links a[aria-current="page"]::after {
+    display: none;
+  }
+
+  /* Tablo style page-hero--dark için arka plan yumuşat */
+  .page-hero--dark {
+    padding: 96px 0 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-slide__title {
+    font-size: clamp(1.3rem, 6.5vw, 1.7rem);
+    padding: 10px 16px;
+  }
+  .reason-carousel {
+    min-height: 500px;
+  }
+  .reason-slide h2 {
+    font-size: 1.3rem;
+  }
+  .reason-slide p {
+    font-size: 0.92rem;
+  }
+  .page-hero h1 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+}
+
+/* PHASE 5c: Hero slide bg img (responsive srcset, object-fit cover) */
+.hero-slide__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+}
+.hero-slide__title {
+  z-index: 3;
+}
+@media (max-width: 760px) {
+  .hero-slide__bg {
+    object-position: center top;
+  }
+}
+
+/* PHASE 5d: Mobile hero — resim kırpılmasın (portrait aspect-ratio) */
+@media (max-width: 760px) {
+  .hero {
+    min-height: 0;
+    aspect-ratio: 9 / 14;
+  }
+  .hero-slide__bg {
+    object-fit: cover;
+    object-position: center;
+  }
+  .hero__shade {
+    background: linear-gradient(180deg, rgba(8, 16, 31, 0.08) 0%, rgba(8, 16, 31, 0.18) 50%, rgba(8, 16, 31, 0.55) 100%);
+  }
+}
+@media (max-width: 480px) {
+  .hero {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* PHASE 5e: programlar.html — sol programlar listesi + sağ form */
+.program-split {
+  display: grid;
+  grid-template-columns: 1fr 0.92fr;
+  gap: 48px;
+  align-items: start;
+}
+.program-side h2 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin: 12px 0 14px;
+}
+.program-side__lead {
+  color: var(--muted);
+  margin: 0 0 28px;
+  font-size: 1rem;
+}
+.program-list {
+  display: grid;
+  gap: 14px;
+}
+.program-row {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.program-row:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.program-row__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.program-row h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.program-row p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.program-row .link-button {
+  color: var(--gold-vivid);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 900px) {
+  .program-split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+@media (max-width: 560px) {
+  .program-row {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .program-row__badge {
+    width: max-content;
   }
 }
