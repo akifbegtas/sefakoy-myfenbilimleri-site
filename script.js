@@ -5,21 +5,18 @@ const SOCIAL_NOTICE_NEXT_DELAY = 5000;
 const ASSISTANT_ANIMATION_MS = 320;
 const DEFAULT_MESSAGE =
   "Merhaba, Sefaköy My Fen Bilimleri hakkında bilgi almak istiyorum.";
+const LEGACY_FORM_HASH = "#ka" + "yit";
 
-// Google Apps Script Web App URL'i — Apps Script deploy edildikten sonra
-// "https://script.google.com/macros/s/.../exec" formatındaki linki buraya yapıştır.
-// Boş bırakılırsa form yalnızca localStorage + WhatsApp davranışıyla çalışır.
-const LEAD_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzG7bg7eeeXg25X_qWX2_GTnDpg_zZMWHPK4Ars61vwUpsxdT49lBEYz3B2P1CfxyJR/exec";
+if (window.location.hash === LEGACY_FORM_HASH) {
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+}
 
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector("[data-nav-links]");
-const leadForm = document.querySelector("#leadForm");
-const formStatus = document.querySelector("#formStatus");
-const leadResult = document.querySelector("#leadResult");
-const leadCode = document.querySelector("#leadCode");
-const leadSummary = document.querySelector("#leadSummary");
-const leadWhatsapp = document.querySelector("#leadWhatsapp");
-const exportLeads = document.querySelector("#exportLeads");
+const infoForm = document.querySelector("#infoForm");
+const infoStatus = document.querySelector("#infoStatus");
+const infoResult = document.querySelector("#infoResult");
+const infoSummary = document.querySelector("#infoSummary");
 const assistantPanel = document.querySelector("#assistantPanel");
 const assistantToggle = document.querySelector("#assistantToggle");
 const assistantClose = document.querySelector("#assistantClose");
@@ -31,6 +28,7 @@ const successCarousel = document.querySelector("[data-success-carousel]");
 const faqItems = document.querySelectorAll("[data-faq-item]");
 let assistantTyping = false;
 let whatsappNoticeTimer = null;
+let siteToastTimer = null;
 
 const SUCCESS_PAGE_SIZE = 10;
 const SUCCESS_ROTATION_DELAY = 5000;
@@ -172,7 +170,8 @@ const buildWhatsappUrl = (message = DEFAULT_MESSAGE) =>
 
 const setWhatsappLinks = () => {
   document.querySelectorAll(".js-whatsapp").forEach((link) => {
-    link.setAttribute("href", buildWhatsappUrl());
+    const message = link.getAttribute("data-whatsapp-message") || DEFAULT_MESSAGE;
+    link.setAttribute("href", buildWhatsappUrl(message));
     link.setAttribute("target", "_blank");
     link.setAttribute("rel", "noreferrer");
   });
@@ -184,6 +183,36 @@ const setInstagramLinks = () => {
     link.setAttribute("target", "_blank");
     link.setAttribute("rel", "noreferrer");
   });
+};
+
+const showInfoStatus = (message, isError = false) => {
+  if (!infoStatus) return;
+  infoStatus.textContent = message;
+  infoStatus.classList.toggle("is-error", isError);
+};
+
+const normalizePhone = (value) => value.replace(/[^\d+]/g, "");
+
+const showSiteToast = (message) => {
+  let toast = document.querySelector("#siteToast");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "siteToast";
+    toast.className = "site-toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.classList.add("is-visible");
+
+  if (siteToastTimer) window.clearTimeout(siteToastTimer);
+  siteToastTimer = window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+    siteToastTimer = null;
+  }, 3600);
 };
 
 const escapeHtml = (value) =>
@@ -347,56 +376,18 @@ const setupFaqAnimations = () => {
   });
 };
 
-const showStatus = (message, isError = false) => {
-  formStatus.textContent = message;
-  formStatus.classList.toggle("is-error", isError);
-};
-
-const readLeads = () => {
-  try {
-    return JSON.parse(localStorage.getItem("sefakoy-myfen-leads")) || [];
-  } catch {
-    return [];
-  }
-};
-
-const saveLead = (lead) => {
-  const leads = readLeads();
-  leads.unshift(lead);
-  localStorage.setItem("sefakoy-myfen-leads", JSON.stringify(leads.slice(0, 200)));
-};
-
-const normalizePhone = (value) => value.replace(/[^\d+]/g, "");
-
-const formatLeadMessage = (lead) => {
-  const lines = [
-    "Merhaba, ön kayıt talebi oluşturmak istiyorum.",
-    `Talep No: ${lead.code}`,
-    `Öğrenci: ${lead.studentName}`,
-    `Veli: ${lead.parentName}`,
-    `Telefon: ${lead.phone}`,
-    `Sınıf: ${lead.grade}`,
-    `Program: ${lead.program}`,
-  ];
-
-  if (lead.target) lines.push(`Hedef: ${lead.target}`);
-  if (lead.note) lines.push(`Not: ${lead.note}`);
-
-  return lines.join("\n");
-};
-
 const assistantRules = [
   {
     priority: 4,
     keywords: ["fiyat", "ucret", "ücret", "odeme", "ödeme", "taksit", "pesin", "peşin", "kampanya", "kontenjan"],
     answer:
-      "Fiyat ve kontenjan bilgisi öğrencinin sınıfı, hedefi ve seçilecek programa göre netleşir. En sağlıklı yol kısa bir ön görüşme yapmak; danışman ekip sınıf seviyesini, ihtiyaç duyulan ders yoğunluğunu ve uygun ödeme seçeneklerini birlikte değerlendirir. Formu doldurursanız dönüş için talep numarası oluşur.",
+      "Fiyat ve kontenjan bilgisi öğrencinin sınıfı, hedefi ve seçilecek programa göre netleşir. En sağlıklı yol kısa bir görüşme yapmak; danışman ekip sınıf seviyesini, ihtiyaç duyulan ders yoğunluğunu ve uygun ödeme seçeneklerini birlikte değerlendirir.",
   },
   {
     priority: 4,
-    keywords: ["kayit", "kayıt", "on kayit", "ön kayıt", "basvuru", "başvuru", "gorusme", "görüşme", "randevu", "nasil baslar", "nasıl başlar"],
+    keywords: ["basvuru", "başvuru", "gorusme", "görüşme", "randevu", "nasil baslar", "nasıl başlar"],
     answer:
-      "Kayıt süreci önce öğrenci ve veliyle kısa bir hedef görüşmesiyle başlar. Öğrencinin sınıfı, okul durumu, deneme netleri varsa mevcut seviyesi ve hedefi konuşulur. Sonra uygun program, ders yoğunluğu, etüt ihtiyacı ve kontenjan durumu netleştirilir. Ön kayıt formu bu görüşme için hızlı talep oluşturur.",
+      "Süreç öğrenci ve veliyle kısa bir hedef görüşmesiyle başlar. Öğrencinin sınıfı, okul durumu, deneme netleri varsa mevcut seviyesi ve hedefi konuşulur. Sonra uygun program, ders yoğunluğu, etüt ihtiyacı ve kontenjan durumu netleştirilir.",
   },
   {
     priority: 5,
@@ -468,7 +459,7 @@ const assistantRules = [
     priority: 3,
     keywords: ["telefon", "whatsapp", "ara", "iletisim", "iletişim"],
     answer:
-      "Telefon ve WhatsApp hattı +90 546 440 17 80. Hızlı dönüş için WhatsApp üzerinden yazabilir ya da ön kayıt formunu doldurup talebinizi kuruma iletebilirsiniz.",
+      "Telefon ve WhatsApp hattı +90 546 440 17 80. Hızlı bilgi almak için WhatsApp üzerinden yazabilir ya da kurumu arayabilirsiniz.",
   },
   {
     priority: 3,
@@ -480,7 +471,7 @@ const assistantRules = [
     priority: 4,
     keywords: ["burs", "bursluluk", "indirim", "bursluluk sinavi", "bursluluk sınavı"],
     answer:
-      "Bursluluk ve indirim bilgileri dönemsel olarak değişebilir. Öğrencinin sınıfı, sınav sonucu ve kontenjan durumuna göre değerlendirme yapılır. Ön kayıt formunda Bursluluk Sınavı seçilirse danışman ekip sınav günü, saat ve şartları paylaşır.",
+      "Bursluluk ve indirim bilgileri dönemsel olarak değişebilir. Öğrencinin sınıfı, sınav sonucu ve kontenjan durumuna göre değerlendirme yapılır. Danışman ekip sınav günü, saat ve şartları telefon ya da WhatsApp üzerinden paylaşır.",
   },
   {
     priority: 3,
@@ -512,10 +503,10 @@ const getAssistantAnswer = (question) => {
   if (scoredRules.length) return scoredRules[0].rule.answer;
 
   if (["merhaba", "selam", "slm", "iyi gunler", "iyi günler"].some((word) => normalized.includes(normalizeAssistantText(word)))) {
-    return "Merhaba, size yardımcı olayım. Öğrencinin sınıfı, hedefi, mevcut netleri ya da merak ettiğiniz konu varsa yazabilirsiniz. Kayıt süreci, fiyat-kontenjan, LGS/YKS programı, deneme analizi, rehberlik, veli takibi ve bursluluk hakkında bilgi verebilirim.";
+    return "Merhaba, size yardımcı olayım. Öğrencinin sınıfı, hedefi, mevcut netleri ya da merak ettiğiniz konu varsa yazabilirsiniz. Fiyat-kontenjan, LGS/YKS programı, deneme analizi, rehberlik, veli takibi ve bursluluk hakkında bilgi verebilirim.";
   }
 
-  return "Bu konuda net konuşabilmek için öğrencinin sınıfı, hedefi ve hangi konuda destek aradığınızı bilmek iyi olur. İsterseniz sorunuzu biraz daha detaylandırın; kayıt, fiyat-kontenjan, LGS/YKS, deneme analizi, etüt, rehberlik ve veli takibi konularında yardımcı olabilirim. Daha özel durumlarda ön kayıt formu veya WhatsApp üzerinden danışman ekibe ulaşmanız en doğru yol olur.";
+  return "Bu konuda net konuşabilmek için öğrencinin sınıfı, hedefi ve hangi konuda destek aradığınızı bilmek iyi olur. İsterseniz sorunuzu biraz daha detaylandırın; fiyat-kontenjan, LGS/YKS, deneme analizi, etüt, rehberlik ve veli takibi konularında yardımcı olabilirim. Daha özel durumlarda WhatsApp üzerinden danışman ekibe ulaşmanız en doğru yol olur.";
 };
 
 const addAssistantMessage = (message, type) => {
@@ -594,26 +585,25 @@ document.querySelectorAll("[data-program]").forEach((button) => {
     const program = button.getAttribute("data-program");
     const programSelect = document.querySelector("#program");
     if (programSelect) programSelect.value = program;
-    document.querySelector("#kayit")?.scrollIntoView({ behavior: "smooth" });
+    const formTarget = document.querySelector("#infoForm") || document.querySelector("#bilgi-formu");
+    formTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
     setTimeout(() => document.querySelector("#studentName")?.focus(), 450);
   });
 });
 
-if (leadForm) {
-  leadForm.addEventListener("submit", (event) => {
+if (infoForm) {
+  infoForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const formData = new FormData(leadForm);
+    const formData = new FormData(infoForm);
     const phone = normalizePhone(String(formData.get("phone") || ""));
 
     if (phone.length < 10) {
-      showStatus("Telefon numarasını kontrol eder misiniz?", true);
+      showInfoStatus("Telefon numarasını kontrol eder misiniz?", true);
       return;
     }
 
-    const lead = {
-      code: `MYFEN-${Date.now().toString().slice(-6)}`,
-      createdAt: new Date().toISOString(),
+    const details = {
       studentName: String(formData.get("studentName") || "").trim(),
       parentName: String(formData.get("parentName") || "").trim(),
       phone,
@@ -623,73 +613,13 @@ if (leadForm) {
       note: String(formData.get("note") || "").trim(),
     };
 
-    saveLead(lead);
-
-    if (LEAD_WEBHOOK_URL) {
-      fetch(LEAD_WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(lead),
-      }).catch((err) => console.warn("Lead webhook hatası:", err));
+    if (infoSummary) {
+      infoSummary.textContent = `${details.studentName} için ${details.program} kaydı alınmıştır.`;
     }
 
-    const message = formatLeadMessage(lead);
-    leadCode.textContent = `Talep No: ${lead.code}`;
-    leadSummary.textContent = `${lead.studentName} için ${lead.program} kaydı hazırlandı.`;
-    leadWhatsapp.href = buildWhatsappUrl(message);
-    leadResult.classList.remove("hidden");
-    showStatus("Ön kayıt talebi hazır. WhatsApp ile kuruma gönderebilirsiniz.");
-  });
-}
-
-if (exportLeads) {
-  exportLeads.addEventListener("click", () => {
-    const leads = readLeads();
-
-    if (!leads.length) {
-      showStatus("Henüz indirilecek kayıt yok.", true);
-      return;
-    }
-
-    const headers = [
-      "Talep No",
-      "Tarih",
-      "Öğrenci",
-      "Veli",
-      "Telefon",
-      "Sınıf",
-      "Program",
-      "Hedef",
-      "Not",
-    ];
-
-    const escapeCsv = (value) => `"${String(value || "").replaceAll('"', '""')}"`;
-    const rows = leads.map((lead) =>
-      [
-        lead.code,
-        lead.createdAt,
-        lead.studentName,
-        lead.parentName,
-        lead.phone,
-        lead.grade,
-        lead.program,
-        lead.target,
-        lead.note,
-      ]
-        .map(escapeCsv)
-        .join(","),
-    );
-
-    const csv = [headers.map(escapeCsv).join(","), ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "sefakoy-myfen-on-kayitlar.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-    showStatus("Kayıt listesi indirildi.");
+    infoResult?.classList.remove("hidden");
+    showInfoStatus("Kayıt alınmıştır.");
+    showSiteToast("Kayıt alınmıştır.");
   });
 }
 

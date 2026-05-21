@@ -6,7 +6,7 @@
     <title>Sefaköy My Fen Bilimleri | LGS, YKS ve Deneme Kulübü</title>
     <meta
       name="description"
-      content="Sefaköy My Fen Bilimleri için LGS, YKS, ara sınıf, deneme kulübü, özel ders, rehberlik ve ön kayıt odaklı modern kurs sitesi."
+      content="Sefaköy My Fen Bilimleri için LGS, YKS, ara sınıf, deneme kulübü, özel ders, rehberlik ve veli iletişimi odaklı modern kurs sitesi."
     />
     <meta name="theme-color" content="#0a1628" />
     <meta property="og:title" content="Sefaköy My Fen Bilimleri" />
@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=6" />
+    <link rel="stylesheet" href="styles.css?v=12" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -56,7 +56,7 @@
     <header class="site-header" id="top">
       <nav class="nav-shell" aria-label="Ana menü">
         <a class="brand brand--logo" href="index.html" aria-label="Sefaköy My Fen Bilimleri anasayfa">
-          <img src="assets/logo-main.png" alt="Sefaköy My Fen Bilimleri" />
+          <img src="assets/logo-main.png?v=8" alt="Sefaköy My Fen Bilimleri" />
         </a>
         <button class="nav-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false">
           <span></span>
@@ -64,12 +64,11 @@
           <span></span>
         </button>
         <div class="nav-links" data-nav-links>
-          <a href="programlar.html">Programlar</a>
+          <a href="programlar.html">Önkayıt</a>
           <a href="hakkimizda.html">Hakkımızda</a>
           <a href="basarilar.html">Başarılar</a>
           <a href="neden-myfen.html">Neden MyFen</a>
           <a href="duyurular.html">Duyurular</a>
-          <a href="programlar.html#kayit">Ön kayıt</a>
           <a href="#iletisim">İletişim</a>
         </div>
       </nav>
@@ -139,10 +138,10 @@
         </div>
         <div class="container faq-list" data-faq-list>
           <div class="faq-item" data-faq-item>
-            <button class="faq-question" id="faq-question-register" type="button" aria-expanded="false" aria-controls="faq-answer-register" data-faq-question>
-              Ön kayıt yaptıktan sonra ne oluyor?
+            <button class="faq-question" id="faq-question-consultation" type="button" aria-expanded="false" aria-controls="faq-answer-consultation" data-faq-question>
+              Görüşme süreci nasıl ilerliyor?
             </button>
-            <div class="faq-answer" id="faq-answer-register" role="region" aria-labelledby="faq-question-register" aria-hidden="true" data-faq-answer>
+            <div class="faq-answer" id="faq-answer-consultation" role="region" aria-labelledby="faq-question-consultation" aria-hidden="true" data-faq-answer>
               <p>Danışman ekibi telefon veya WhatsApp üzerinden dönüş yapar, öğrencinin seviyesi ve uygun programı için görüşme planlar.</p>
             </div>
           </div>
@@ -177,7 +176,7 @@
         <div class="container contact-grid">
           <div>
             <p class="eyebrow">İletişim</p>
-            <h2>Sefaköy merkezde görüşme ve kayıt danışmanlığı</h2>
+            <h2>Sefaköy merkezde görüşme ve eğitim danışmanlığı</h2>
             <address>
               SEFAKÖY MY FEN BİLİMLERİ ÖZEL ÖĞRETİM KURSU<br />
               Tevfik Bey Mah. Vahit Efendi Sk. No:13<br />
@@ -206,9 +205,11 @@
 
     <footer class="site-footer">
       <div class="container footer-grid">
-        <div>
-          <img class="footer-brand-logo" src="assets/logo-main.png" alt="Sefaköy My Fen Bilimleri" />
-          <p>LGS, YKS, ara sınıf, deneme kulübü, özel ders ve rehberlik odaklı eğitim kurumu — Sefaköy, İstanbul.</p>
+        <div class="footer-brand-block">
+          <img class="footer-brand-logo" src="assets/logo-main.png?v=8" alt="Sefaköy My Fen Bilimleri" />
+          <div>
+            <p>LGS, YKS, ara sınıf, deneme kulübü, özel ders ve rehberlik odaklı eğitim kurumu — Sefaköy, İstanbul.</p>
+          </div>
         </div>
         <div>
           <span>Hızlı bağlantılar</span>
@@ -216,7 +217,6 @@
           <a href="hakkimizda.html">Hakkımızda</a>
           <a href="basarilar.html">Başarılar</a>
           <a href="duyurular.html">Duyurular</a>
-          <a href="programlar.html#kayit">Ön kayıt</a>
           <a href="#iletisim">İletişim</a>
         </div>
       </div>
@@ -254,7 +254,7 @@
           <a class="social-notice__content js-whatsapp" href="#">
             <span>
               <strong>İletişime geç</strong>
-              <small>Kayıt ve kontenjan için yaz</small>
+              <small>Program ve kontenjan için yaz</small>
             </span>
           </a>
           <button type="button" data-social-notice-close aria-label="WhatsApp bildirimini kapat">×</button>
@@ -273,11 +273,11 @@
         </div>
         <div class="assistant-messages" id="assistantMessages" role="log" aria-live="polite">
           <div class="assistant-message assistant-message--bot">
-            Merhaba, öğrencinin sınıfını ve hedefini yazarsanız kayıt, program, deneme analizi, rehberlik ve veli takibi hakkında yardımcı olabilirim.
+            Merhaba, öğrencinin sınıfını ve hedefini yazarsanız program, deneme analizi, rehberlik ve veli takibi hakkında yardımcı olabilirim.
           </div>
         </div>
         <div class="assistant-suggestions" aria-label="Hazır sorular">
-          <button type="button" data-assistant-prompt="Kayıt süreci nasıl ilerliyor?">Kayıt</button>
+          <button type="button" data-assistant-prompt="Görüşme süreci nasıl ilerliyor?">Görüşme</button>
           <button type="button" data-assistant-prompt="Deneme sonuçları ve eksikler nasıl takip ediliyor?">Deneme</button>
           <button type="button" data-assistant-prompt="Velilere öğrenci takibi nasıl bildiriliyor?">Veli takibi</button>
           <button type="button" data-assistant-prompt="Sınıf mevcudu ve kontenjan hakkında bilgi alabilir miyim?">Kontenjan</button>
@@ -294,6 +294,6 @@
       </button>
     </div>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=13"></script>
   </body>
 </html>
