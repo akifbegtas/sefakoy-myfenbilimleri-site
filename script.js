@@ -28,7 +28,6 @@ const successCarousel = document.querySelector("[data-success-carousel]");
 const faqItems = document.querySelectorAll("[data-faq-item]");
 let assistantTyping = false;
 let whatsappNoticeTimer = null;
-let siteToastTimer = null;
 
 const SUCCESS_PAGE_SIZE = 10;
 const SUCCESS_ROTATION_DELAY = 5000;
@@ -192,28 +191,6 @@ const showInfoStatus = (message, isError = false) => {
 };
 
 const normalizePhone = (value) => value.replace(/[^\d+]/g, "");
-
-const showSiteToast = (message) => {
-  let toast = document.querySelector("#siteToast");
-
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.id = "siteToast";
-    toast.className = "site-toast";
-    toast.setAttribute("role", "status");
-    toast.setAttribute("aria-live", "polite");
-    document.body.appendChild(toast);
-  }
-
-  toast.textContent = message;
-  toast.classList.add("is-visible");
-
-  if (siteToastTimer) window.clearTimeout(siteToastTimer);
-  siteToastTimer = window.setTimeout(() => {
-    toast.classList.remove("is-visible");
-    siteToastTimer = null;
-  }, 3600);
-};
 
 const escapeHtml = (value) =>
   String(value)
@@ -580,17 +557,6 @@ if (navToggle && navLinks) {
   });
 }
 
-document.querySelectorAll("[data-program]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const program = button.getAttribute("data-program");
-    const programSelect = document.querySelector("#program");
-    if (programSelect) programSelect.value = program;
-    const formTarget = document.querySelector("#infoForm") || document.querySelector("#bilgi-formu");
-    formTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setTimeout(() => document.querySelector("#studentName")?.focus(), 450);
-  });
-});
-
 if (infoForm) {
   infoForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -614,12 +580,11 @@ if (infoForm) {
     };
 
     if (infoSummary) {
-      infoSummary.textContent = `${details.studentName} için ${details.program} kaydı alınmıştır.`;
+      infoSummary.textContent = `${details.studentName} için ${details.program} kayıt talebi alınmıştır. Ekibimiz en kısa sürede sizinle iletişime geçecektir.`;
     }
 
     infoResult?.classList.remove("hidden");
-    showInfoStatus("Kayıt alınmıştır.");
-    showSiteToast("Kayıt alınmıştır.");
+    showInfoStatus("");
   });
 }
 
