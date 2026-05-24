@@ -5,7 +5,7 @@ const SOCIAL_NOTICE_NEXT_DELAY = 5000;
 const ASSISTANT_ANIMATION_MS = 320;
 const DEFAULT_MESSAGE =
   "Merhaba, Sefaköy My Fen Bilimleri hakkında bilgi almak istiyorum.";
-const LEAD_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzG7bg7eeeXg25X_qWX2_GTnDpg_zZMWHPK4Ars61vwUpsxdT49lBEYz3B2P1CfxyJR/exec";
+const LEAD_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbycNE9grJ5SHnBFwPo9O54ZNIGs9Qrnrd-Ubgu-u7LXud8v94oBYX9sPBn2_s6WFDEi/exec";
 const LEGACY_FORM_HASH = "#ka" + "yit";
 
 if (window.location.hash === LEGACY_FORM_HASH) {
