@@ -5,6 +5,8 @@ const SOCIAL_NOTICE_NEXT_DELAY = 5000;
 const ASSISTANT_ANIMATION_MS = 320;
 const DEFAULT_MESSAGE =
   "Merhaba, Sefaköy My Fen Bilimleri hakkında bilgi almak istiyorum.";
+const LEAD_STORAGE_KEY = "sefakoy-myfen-leads";
+const LEAD_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzG7bg7eeeXg25X_qWX2_GTnDpg_zZMWHPK4Ars61vwUpsxdT49lBEYz3B2P1CfxyJR/exec";
 const LEGACY_FORM_HASH = "#ka" + "yit";
 
 if (window.location.hash === LEGACY_FORM_HASH) {
@@ -16,7 +18,9 @@ const navLinks = document.querySelector("[data-nav-links]");
 const infoForm = document.querySelector("#infoForm");
 const infoStatus = document.querySelector("#infoStatus");
 const infoResult = document.querySelector("#infoResult");
+const infoCode = document.querySelector("#infoCode");
 const infoSummary = document.querySelector("#infoSummary");
+const exportLeads = document.querySelector("#exportLeads");
 const assistantPanel = document.querySelector("#assistantPanel");
 const assistantToggle = document.querySelector("#assistantToggle");
 const assistantClose = document.querySelector("#assistantClose");
@@ -191,6 +195,35 @@ const showInfoStatus = (message, isError = false) => {
 };
 
 const normalizePhone = (value) => value.replace(/[^\d+]/g, "");
+
+const readLeads = () => {
+  try {
+    const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY));
+    return Array.isArray(leads) ? leads : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveLead = (lead) => {
+  const leads = readLeads();
+  leads.unshift(lead);
+  localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(leads.slice(0, 300)));
+};
+
+const sendLeadWebhook = (lead) => {
+  if (!LEAD_WEBHOOK_URL) return;
+
+  fetch(LEAD_WEBHOOK_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(lead),
+  }).catch((err) => {
+    console.warn("Lead webhook hatası:", err);
+    showInfoStatus("Kayıt bu tarayıcıda saklandı; mail/Sheet bağlantısı kurulamadı.", true);
+  });
+};
 
 const escapeHtml = (value) =>
   String(value)
@@ -569,7 +602,9 @@ if (infoForm) {
       return;
     }
 
-    const details = {
+    const lead = {
+      code: `MYFEN-${Date.now().toString().slice(-6)}`,
+      createdAt: new Date().toISOString(),
       studentName: String(formData.get("studentName") || "").trim(),
       parentName: String(formData.get("parentName") || "").trim(),
       phone,
@@ -579,12 +614,69 @@ if (infoForm) {
       note: String(formData.get("note") || "").trim(),
     };
 
+    saveLead(lead);
+    sendLeadWebhook(lead);
+
+    if (infoCode) {
+      infoCode.textContent = `Talep No: ${lead.code}`;
+    }
+
     if (infoSummary) {
-      infoSummary.textContent = `${details.studentName} için ${details.program} kayıt talebi alınmıştır. Ekibimiz en kısa sürede sizinle iletişime geçecektir.`;
+      infoSummary.textContent = `${lead.studentName} için ${lead.program} kayıt talebi alınmıştır. Ekibimiz en kısa sürede sizinle iletişime geçecektir.`;
     }
 
     infoResult?.classList.remove("hidden");
-    showInfoStatus("");
+    showInfoStatus("Kayıt talebi kaydedildi; mail/Sheet gönderimi başlatıldı.");
+  });
+}
+
+if (exportLeads) {
+  exportLeads.addEventListener("click", () => {
+    const leads = readLeads();
+
+    if (!leads.length) {
+      showInfoStatus("Henüz indirilecek kayıt yok.", true);
+      return;
+    }
+
+    const headers = [
+      "Talep No",
+      "Tarih",
+      "Öğrenci",
+      "Veli",
+      "Telefon",
+      "Sınıf",
+      "Program",
+      "Hedef",
+      "Not",
+    ];
+
+    const escapeCsv = (value) => `"${String(value || "").replaceAll('"', '""')}"`;
+    const rows = leads.map((lead) =>
+      [
+        lead.code,
+        lead.createdAt,
+        lead.studentName,
+        lead.parentName,
+        lead.phone,
+        lead.grade,
+        lead.program,
+        lead.target,
+        lead.note,
+      ]
+        .map(escapeCsv)
+        .join(";"),
+    );
+
+    const csv = `\uFEFF${[headers.map(escapeCsv).join(";"), ...rows].join("\n")}`;
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "sefakoy-myfen-on-kayitlar.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+    showInfoStatus("Kayıt listesi CSV olarak indirildi.");
   });
 }
 
